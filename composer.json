@@ -1,0 +1,55 @@
+{
+    "name": "appkeep/appkeep-laravel",
+    "description": "Confidently deploy Laravel apps",
+    "keywords": [
+        "appkeep",
+        "appkeep-laravel"
+    ],
+    "homepage": "https://github.com/appkeep/appkeep-laravel",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Appkeep",
+            "email": "hello@appkeep.dev",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0",
+        "illuminate/support": "^8.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.1",
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "AppKeep": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AppKeep\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AppKeep\\AppKeepServiceProvider"
+            ],
+            "aliases": {
+                "AppKeepLaravel": "AppKeep\\AppKeepFacade"
+            }
+        }
+    }
+}
