@@ -1,10 +1,13 @@
 <?php
 
-namespace Appkeep;
+namespace Appkeep\Eye;
 
+use Appkeep\Commands\InitCommand;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Appkeep\Subscribers\ScheduledCommandSubscriber;
 
-class AppKeepServiceProvider extends ServiceProvider
+class EyeServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -21,7 +24,7 @@ class AppKeepServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('appkeep.php'),
+                __DIR__ . '/../config/config.php' => config_path('appkeep.php'),
             ], 'config');
 
             // Publishing the views.
@@ -41,6 +44,11 @@ class AppKeepServiceProvider extends ServiceProvider
 
             // Registering package commands.
             // $this->commands([]);
+            $this->commands([
+                InitCommand::class,
+            ]);
+
+            Event::subscribe(ScheduledCommandSubscriber::class);
         }
     }
 
@@ -50,11 +58,11 @@ class AppKeepServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'appkeep');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'appkeep');
 
         // Register the main class to use with the facade
         $this->app->singleton('appkeep', function () {
-            return new AppKeep();
+            return new Appkeep();
         });
     }
 }

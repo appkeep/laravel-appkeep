@@ -1,11 +1,12 @@
 {
-    "name": "appkeep/appkeep-laravel",
-    "description": "Confidently deploy Laravel apps",
+    "name": "appkeep/eye",
+    "description": "Confidently deploy Laravel apps.",
     "keywords": [
         "appkeep",
-        "appkeep-laravel"
+        "appkee-eye",
+        "appkeep"
     ],
-    "homepage": "https://github.com/appkeep/appkeep-laravel",
+    "homepage": "https://github.com/appkeep/eye",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -26,18 +27,17 @@
     },
     "autoload": {
         "psr-4": {
-            "AppKeep": "src"
+            "Appkeep\\Eye\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "AppKeep\\Tests\\": "tests"
+            "Appkeep\\Eye\\Tests\\": "tests"
         }
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
-
     },
     "config": {
         "sort-packages": true
@@ -45,10 +45,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "AppKeep\\AppKeepServiceProvider"
+                "Appkeep\\Eye\\EyeServiceProvider"
             ],
             "aliases": {
-                "AppKeepLaravel": "AppKeep\\AppKeepFacade"
+                "AppkeepLaravel": "Appkeep\\Eye\\EyeFacade"
             }
         }
     }

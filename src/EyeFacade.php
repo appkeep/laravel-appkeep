@@ -1,10 +1,10 @@
 <?php
 
-namespace Appkeep;
+namespace Appkeep\Eye;
 
 use Illuminate\Support\Facades\Facade;
 
-class AppKeepFacade extends Facade
+class AppkeepFacade extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -13,6 +13,6 @@ class AppKeepFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'appkeep';
+        return 'appkeep-eye';
     }
 }
