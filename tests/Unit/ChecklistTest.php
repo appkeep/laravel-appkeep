@@ -4,18 +4,24 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use Appkeep\Eye\Checklist;
+use Illuminate\Http\Client\Request;
+use Illuminate\Support\Facades\Http;
 
 class ChecklistTest extends TestCase
 {
     /**
      * @test
      */
-    public function it_can_deserialize_from_json()
+    public function it_fetches_checklist_from_server()
     {
         $fixture = __DIR__ . '/../_fixtures/checklist.json';
-        $checklist = Checklist::fromJson(file_get_contents($fixture));
 
-        // It contains the default check.
+        Http::fake([
+            'appkeep.dev/*' => Http::response(json_decode(file_get_contents($fixture), true), 200),
+        ]);
+
+        $checklist = Checklist::fetch();
+
         $this->assertCount(2, $checklist->values());
 
         $item = $checklist->first();
@@ -31,5 +37,11 @@ class ChecklistTest extends TestCase
         $this->assertEquals('* * * * *', $item->frequency);
         $this->assertEquals([], $item->arguments);
         $this->assertNull($item->threshold);
+
+
+        Http::assertSent(function (Request $request) {
+            return $request->hasHeader('Authorization', 'EyeSecret test_secret') &&
+                $request->url() == 'https://appkeep.dev/api/eye/checklist';
+        });
     }
 }

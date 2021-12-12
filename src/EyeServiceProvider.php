@@ -2,8 +2,9 @@
 
 namespace Appkeep\Eye;
 
-use Appkeep\Commands\InitCommand;
 use Illuminate\Support\ServiceProvider;
+use Appkeep\Eye\Commands\RunChecksCommand;
+use Illuminate\Console\Scheduling\Schedule;
 
 class EyeServiceProvider extends ServiceProvider
 {
@@ -12,39 +13,19 @@ class EyeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /*
-         * Optional methods to load your package assets
-         */
-        // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'appkeep-laravel');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'appkeep-laravel');
-        // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
-
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/config.php' => config_path('appkeep.php'),
+                __DIR__ . '/../config/appkeep.php' => config_path('appkeep.php'),
             ], 'config');
 
-            // Publishing the views.
-            /*$this->publishes([
-                __DIR__.'/../resources/views' => resource_path('views/vendor/appkeep-laravel'),
-            ], 'views');*/
-
-            // Publishing assets.
-            /*$this->publishes([
-                __DIR__.'/../resources/assets' => public_path('vendor/appkeep-laravel'),
-            ], 'assets');*/
-
-            // Publishing the translation files.
-            /*$this->publishes([
-                __DIR__.'/../resources/lang' => resource_path('lang/vendor/appkeep-laravel'),
-            ], 'lang');*/
-
-            // Registering package commands.
-            // $this->commands([]);
             $this->commands([
-                InitCommand::class,
+                RunChecksCommand::class,
             ]);
+
+            $this->app->booted(function () {
+                $schedule = $this->app->make(Schedule::class);
+                $schedule->command('appkeep:eye')->everyMinute();
+            });
         }
     }
 
