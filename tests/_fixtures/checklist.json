@@ -1,0 +1,25 @@
+{
+    "checks": [
+        {
+            "uid": "x",
+            "check": "disk_usage",
+            "frequency": "*/5 * * * *",
+            "arguments": {
+                "disk": "local"
+            },
+            "threshold": {
+                "value": 0.8,
+                "comparator": ">"
+            }
+        },
+        {
+            "uid": "y",
+            "check": "heartbeat",
+            "frequency": "* * * * *",
+            "arguments": {},
+            "handlers": [
+                "slack"
+            ]
+        }
+    ]
+}

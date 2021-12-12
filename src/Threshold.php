@@ -4,8 +4,8 @@ namespace Appkeep\Eye;
 
 class Threshold
 {
-    private $threshold;
-    private $comparator;
+    public $threshold;
+    public $comparator;
 
     public function __construct($threshold, $comparator)
     {
@@ -17,7 +17,7 @@ class Threshold
     {
         // checks value against threshold usng the comparator
         switch ($this->comparator) {
-            case '==':
+            case '=':
                 return $value == $this->threshold;
             case '!=':
                 return $value != $this->threshold;
@@ -30,7 +30,7 @@ class Threshold
             case '<=':
                 return $value <= $this->threshold;
             default:
-                throw new \Exception(sprintf(
+                throw new \RuntimeException(sprintf(
                     'Appkeep Eye: Invalid comparator %s in checklist, must be one of >, <, >=, <=, ==, !=',
                     $this->comparator
                 ));
