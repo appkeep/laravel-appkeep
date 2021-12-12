@@ -32,7 +32,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Appkeep\\Eye\\Tests\\": "tests"
+            "Tests\\": "tests"
         }
     },
     "scripts": {
