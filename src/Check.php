@@ -5,7 +5,7 @@ namespace Appkeep\Eye;
 use Carbon\Carbon;
 use Cron\CronExpression;
 
-class ChecklistItem
+class Check
 {
     /**
      * Name of the check...

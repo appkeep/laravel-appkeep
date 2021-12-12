@@ -2,21 +2,21 @@
 
 namespace Appkeep\Eye\Checks;
 
+use Appkeep\Eye\Check;
 use Illuminate\Support\Arr;
-use Appkeep\Eye\ChecklistItem;
 
 abstract class AbstractCheck
 {
     /**
-     * @var ChecklistItem
+     * @var Check
      */
-    protected $checklistItem;
+    protected $check;
 
     public $result = null;
 
-    public function __construct(ChecklistItem $checklistItem)
+    public function __construct(Check $check)
     {
-        $this->checklistItem = $checklistItem;
+        $this->check = $check;
     }
 
     abstract public function run();
@@ -27,6 +27,6 @@ abstract class AbstractCheck
      */
     protected function argument($key, $default = null)
     {
-        return Arr::get($this->checklistItem->arguments, $key, $default);
+        return Arr::get($this->check->arguments, $key, $default);
     }
 }

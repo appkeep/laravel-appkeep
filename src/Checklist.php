@@ -13,7 +13,7 @@ class Checklist extends Collection
         $json = json_decode($json, true);
 
         foreach ($json['checks'] as $check) {
-            $items[] = ChecklistItem::build($check);
+            $items[] = Check::build($check);
         }
 
         return new static($items);

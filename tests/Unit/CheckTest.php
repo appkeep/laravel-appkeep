@@ -4,9 +4,9 @@ namespace Tests\Unit;
 
 use Carbon\Carbon;
 use Tests\TestCase;
-use Appkeep\Eye\ChecklistItem;
+use Appkeep\Eye\Check;
 
-class ChecklistItemTest extends TestCase
+class CheckTest extends TestCase
 {
     /**
      * @test
@@ -16,7 +16,7 @@ class ChecklistItemTest extends TestCase
         // 12 December, 2021 @ 00:02:00
         Carbon::setTestNow(Carbon::create(2021, 12, 12, 0, 2));
 
-        $item = new ChecklistItem();
+        $item = new Check();
 
         $item->frequency = '* * * * *';
         $this->assertTrue($item->isDue());
@@ -34,7 +34,7 @@ class ChecklistItemTest extends TestCase
      */
     public function it_throws_error_if_frequency_is_invalid()
     {
-        $item = new ChecklistItem();
+        $item = new Check();
         $item->frequency = 'invalid value';
 
         $this->expectExceptionMessage('CRON');

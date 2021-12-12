@@ -3,9 +3,7 @@
 namespace Appkeep\Eye;
 
 use Appkeep\Commands\InitCommand;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
-use Appkeep\Subscribers\ScheduledCommandSubscriber;
 
 class EyeServiceProvider extends ServiceProvider
 {
@@ -47,8 +45,6 @@ class EyeServiceProvider extends ServiceProvider
             $this->commands([
                 InitCommand::class,
             ]);
-
-            Event::subscribe(ScheduledCommandSubscriber::class);
         }
     }
 
@@ -58,11 +54,6 @@ class EyeServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'appkeep');
-
-        // Register the main class to use with the facade
-        $this->app->singleton('appkeep', function () {
-            return new Appkeep();
-        });
+        $this->mergeConfigFrom(__DIR__ . '/../config/appkeep.php', 'appkeep');
     }
 }
