@@ -1,0 +1,8 @@
+/vendor
+
+# IDE files
+.idea
+
+# Cache files
+.php-cs-fixer.cache
+.phpunit.result.cache
