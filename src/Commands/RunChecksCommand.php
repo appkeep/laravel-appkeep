@@ -4,6 +4,7 @@ namespace Appkeep\Eye\Commands;
 
 use Appkeep\Eye\Result;
 use Appkeep\Eye\Appkeep;
+use Appkeep\Eye\Enums\Status;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
@@ -17,7 +18,8 @@ class RunChecksCommand extends Command
         $appkeep = resolve(Appkeep::class);
         $checks = collect($appkeep->checks)->filter->isDue();
 
-        $output = [];
+        $results = [];
+        $consoleOutput = [];
 
         foreach ($checks as $check) {
             try {
@@ -25,7 +27,7 @@ class RunChecksCommand extends Command
             } catch (\Exception $e) {
                 $result = Result::crash($e->getMessage());
             } finally {
-                $output[] = [
+                $results[] = [
                     'check' => $check->name,
                     'server' => config('appkeep.server'),
                     'result' => [
@@ -34,6 +36,8 @@ class RunChecksCommand extends Command
                         'summary' => $result->summary,
                     ],
                 ];
+
+                $consoleOutput[] = $this->toConsoleTableRow($check->name, $result);
             }
         }
 
@@ -41,7 +45,25 @@ class RunChecksCommand extends Command
             'Authorization' => sprintf('Bearer %s', config('appkeep.key')),
         ])
             ->post('https://appkeep.dev/api/v1/intake', [
-                'checks' => $output,
+                'checks' => $results,
             ]);
+
+        $this->table(['Check', 'Outcome', 'Message'], $consoleOutput);
+    }
+
+    private function toConsoleTableRow($name, Result $result)
+    {
+        $status = [
+            Status::CRASH => '❌',
+            Status::OK => sprintf('✅ %s', $result->summary ?? 'OK'),
+            Status::WARN => '⚠️',
+            Status::FAIL => '🚨',
+        ];
+
+        return [
+            $name,
+            $status[$result->value],
+            $result->message ?? '',
+        ];
     }
 }
