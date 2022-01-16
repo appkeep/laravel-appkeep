@@ -1,6 +1,6 @@
 <?php
 
-namespace Appkeep\Eye\Commands;
+namespace Appkeep\Eye\Checks;
 
 use Appkeep\Eye\Check;
 use Appkeep\Eye\Result;

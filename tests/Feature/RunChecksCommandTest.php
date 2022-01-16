@@ -16,9 +16,6 @@ class RunChecksCommandTest extends TestCase
      */
     public function the_check_command_is_registered()
     {
-        // Prevent hitting Appkeep server.
-        Http::fake();
-
         $this->artisan('eye:check')->expectsOutput('No checks are due to run.');
     }
 

@@ -10,7 +10,7 @@ abstract class Check
 {
     public $name;
 
-    protected string $expression = '* * * * *';
+    public $expression = '* * * * *';
 
     use ManagesFrequencies {
         // These two methods are not supported.

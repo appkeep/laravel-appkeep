@@ -4,6 +4,7 @@ namespace Appkeep\Eye;
 
 use Illuminate\Support\ServiceProvider;
 use Appkeep\Eye\Commands\RunChecksCommand;
+use Appkeep\Eye\Commands\ListChecksCommand;
 use Illuminate\Console\Scheduling\Schedule;
 
 class EyeServiceProvider extends ServiceProvider
@@ -19,6 +20,7 @@ class EyeServiceProvider extends ServiceProvider
             ], 'config');
 
             $this->commands([
+                ListChecksCommand::class,
                 RunChecksCommand::class,
             ]);
 
