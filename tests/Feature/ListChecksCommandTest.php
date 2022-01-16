@@ -28,7 +28,7 @@ class ListChecksCommandTest extends TestCase
             TestCheck::make('baz')->dailyAt('12:00'),
         ]);
 
-        $this->artisan('eye:list')->assertSuccessful()->expectsTable(
+        $this->artisan('eye:list')->assertExitCode(0)->expectsTable(
             ['Check', 'Expression'],
             [
                 ['bar', '*/15 * * * *'],
