@@ -18,6 +18,12 @@ class RunChecksCommand extends Command
         $appkeep = resolve(Appkeep::class);
         $checks = collect($appkeep->checks)->filter->isDue();
 
+        if ($checks->isEmpty()) {
+            $this->info('No checks are due to run.');
+
+            return;
+        }
+
         $results = [];
         $consoleOutput = [];
 

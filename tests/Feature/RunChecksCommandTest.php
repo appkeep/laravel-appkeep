@@ -19,7 +19,7 @@ class RunChecksCommandTest extends TestCase
         // Prevent hitting Appkeep server.
         Http::fake();
 
-        $this->artisan('eye:check')->assertExitCode(0);
+        $this->artisan('eye:check')->expectsOutput('No checks are due to run.');
     }
 
     /**
