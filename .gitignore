@@ -6,3 +6,6 @@
 # Cache files
 .php-cs-fixer.cache
 .phpunit.result.cache
+
+# Composer
+composer.lock
