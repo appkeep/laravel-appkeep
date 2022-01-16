@@ -50,6 +50,8 @@ abstract class Check
         }
         */
 
-        return (new CronExpression($this->expression))->isDue($date->toDateTimeString());
+        return CronExpression::factory($this->expression)->isDue(
+            $date->toDateTimeString()
+        );
     }
 }
