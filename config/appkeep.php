@@ -2,6 +2,12 @@
 
 
 return [
+
+    /**
+     * Don't change this URL, unless you have a good reason.
+     */
+    'endpoint' => 'https://appkeep.dev/api/v1/health',
+
     /**
      * Make sure to set this in your .env file.
      */

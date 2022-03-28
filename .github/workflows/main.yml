@@ -18,7 +18,7 @@ jobs:
         # os: [ubuntu-latest, windows-latest]
         os: [ubuntu-latest]
         php: [7.4, 8.0, 8.1]
-        laravel: [7.*, 8.*]
+        laravel: [7.*, 8.*, 9.*]
         #stability: [prefer-lowest, prefer-stable]
         stability: [prefer-stable]
         include:
@@ -26,6 +26,8 @@ jobs:
             testbench: 5.*
           - laravel: 8.*
             testbench: ^6.6
+          - laravel: 9.*
+            testbench: 7.*
         # Laravel 7 has no support for PHP 8.1
         exclude:
           - laravel: 7.*
@@ -34,6 +36,9 @@ jobs:
           - laravel: 7.*
             php: 8
             stability: prefer-lowest
+          # Laravel 9 doesn't support < PHP 8
+          - laravel: 9.*
+            php: 7.4
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
