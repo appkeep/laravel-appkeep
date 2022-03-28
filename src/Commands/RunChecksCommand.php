@@ -47,14 +47,22 @@ class RunChecksCommand extends Command
             }
         }
 
-        Http::withHeaders([
-            'Authorization' => sprintf('Bearer %s', config('appkeep.key')),
-        ])
-            ->post('https://appkeep.dev/api/v1/intake', [
-                'checks' => $results,
-            ]);
+        try {
+            $this->postResultsToAppkeep($results);
+        } catch (\Exception $e) {
+            $this->warn('Failed to post results to Appkeep.');
+            $this->line($e->getMessage());
+        }
 
         $this->table(['Check', 'Outcome', 'Message'], $consoleOutput);
+    }
+
+    private function postResultsToAppkeep($results)
+    {
+        Http::withHeaders(['Authorization' => sprintf('Bearer %s', config('appkeep.key'))])
+            ->post(config('appkeep.endpoint'), [
+                'checks' => $results,
+            ]);
     }
 
     private function toConsoleTableRow($name, Result $result)
