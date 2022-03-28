@@ -1,6 +1,12 @@
 name: run-tests
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   test:
@@ -12,7 +18,7 @@ jobs:
         # os: [ubuntu-latest, windows-latest]
         os: [ubuntu-latest]
         php: [7.4, 8.0, 8.1]
-        laravel: [7.*, 8.*]
+        laravel: [7.*, 8.*, 9.*]
         #stability: [prefer-lowest, prefer-stable]
         stability: [prefer-stable]
         include:
