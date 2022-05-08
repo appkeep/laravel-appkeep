@@ -62,7 +62,8 @@ class RunChecksCommand extends Command
         Http::withHeaders(['Authorization' => sprintf('Bearer %s', config('appkeep.key'))])
             ->post(config('appkeep.endpoint'), [
                 'checks' => $results,
-            ]);
+            ])
+            ->throw();
     }
 
     private function toConsoleTableRow($name, Result $result)

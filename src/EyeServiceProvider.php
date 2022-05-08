@@ -14,24 +14,26 @@ class EyeServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__ . '/../config/appkeep.php' => config_path('appkeep.php'),
-            ], 'config');
-
-            $this->commands([
-                ListChecksCommand::class,
-                RunChecksCommand::class,
-            ]);
-
-            $this->app->booted(function () {
-                $schedule = $this->app->make(Schedule::class);
-
-                $schedule->command('eye:check')
-                    ->everyMinute()
-                    ->runInBackground();
-            });
+        if (! $this->app->runningInConsole()) {
+            return;
         }
+
+        $this->publishes([
+            __DIR__ . '/../config/appkeep.php' => config_path('appkeep.php'),
+        ], 'config');
+
+        $this->commands([
+            ListChecksCommand::class,
+            RunChecksCommand::class,
+        ]);
+
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+
+            $schedule->command('eye:check')
+                ->everyMinute()
+                ->runInBackground();
+        });
     }
 
     /**
