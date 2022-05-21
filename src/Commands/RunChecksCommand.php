@@ -37,9 +37,10 @@ class RunChecksCommand extends Command
                     'check' => $check->name,
                     'server' => config('appkeep.server'),
                     'result' => [
-                        'value' => $result->value,
+                        'status' => $result->status,
                         'message' => $result->message,
                         'summary' => $result->summary,
+                        'meta' => $result->meta,
                     ],
                 ];
 
@@ -77,7 +78,7 @@ class RunChecksCommand extends Command
 
         return [
             $name,
-            $status[$result->value],
+            $status[$result->status],
             $result->message ?? '',
         ];
     }

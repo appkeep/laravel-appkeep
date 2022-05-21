@@ -7,10 +7,9 @@ use Appkeep\Eye\Enums\Status;
 class Result
 {
     /**
-     * Outcome value...
      * Can be one of the status constants.
      */
-    public $value;
+    public $status;
 
     /**
      * A message describing the warning or error.
@@ -22,9 +21,14 @@ class Result
      */
     public $summary = null;
 
-    public function __construct($value, $message = null)
+    /**
+     * For details like actual numbers, etc.
+     */
+    public $meta = null;
+
+    public function __construct($status, $message = null)
     {
-        $this->value = $value;
+        $this->status = $status;
         $this->message = $message;
     }
 

@@ -30,17 +30,26 @@ class DiskUsageCheck extends Check
         $usedSpace = $freeSpace / disk_total_space(base_path());
         $usedSpace = round($usedSpace * 100);
 
+        $meta = [
+            'type' => 'percent',
+            'value' => $usedSpace / 100,
+        ];
+
         if ($usedSpace >= $this->failAt) {
             return Result::fail('Your disk is too full! Only ' . $this->humanFileSize($freeSpace) . ' left.')
-                ->summary("{$usedSpace}%");
+                ->summary("{$usedSpace}%")
+                ->meta($meta);
         }
 
         if ($usedSpace >= $this->warnAt) {
             return Result::warn('Your disk is getting full! Only ' . $this->humanFileSize($freeSpace) . ' left.')
-                ->summary("{$usedSpace}%");
+                ->summary("{$usedSpace}%")
+                ->meta($meta);
         }
 
-        return Result::ok()->summary("{$usedSpace}%");
+        return Result::ok()
+            ->summary("{$usedSpace}%")
+            ->meta($meta);
     }
 
     private function humanFileSize($size, $unit = "")
