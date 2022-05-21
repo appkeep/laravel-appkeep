@@ -1,52 +1,47 @@
-# Very short description of the package
+# Official App:keep SDK for Laravel
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/appkeep/appkeep-laravel.svg?style=flat-square)](https://packagist.org/packages/appkeep/appkeep-laravel)
-[![Total Downloads](https://img.shields.io/packagist/dt/appkeep/appkeep-laravel.svg?style=flat-square)](https://packagist.org/packages/appkeep/appkeep-laravel)
-![GitHub Actions](https://github.com/appkeep/appkeep-laravel/actions/workflows/main.yml/badge.svg)
+_Deploy Laravel confidently._
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what PSRs you support to avoid any confusion with users and contributors.
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/appkeep/laravel-appkeep.svg?style=flat-square)](https://packagist.org/packages/appkeep/laravel-appkeep)
+[![Total Downloads](https://img.shields.io/packagist/dt/appkeep/laravel-appkeep.svg?style=flat-square)](https://packagist.org/packages/appkeep/laravel-appkeep)
+![GitHub Actions](https://github.com/appkeep/laravel-appkeep/actions/workflows/main.yml/badge.svg)
+
+This is the official Laravel SDK for [App:keep](https://appkeep.dev)
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require appkeep/appkeep-laravel
+composer require appkeep/laravel-appkeep
 ```
 
 ## Usage
+
+TBD
 
 ```php
 // Usage description here
 ```
 
-### Testing
+### Writing your own checks
 
-```bash
-composer test
-```
+TBD
 
 ### Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
 ### Security
 
-If you discover any security related issues, please email hello@appkeep.dev instead of using the issue tracker.
+If you discover any security related issues, please email hello@swiftmade.co instead of using the issue tracker.
 
 ## Credits
 
--   [Appkeep](https://github.com/appkeep)
--   [All Contributors](../../contributors)
+- [Appkeep](https://github.com/appkeep)
+- [All Contributors](../../contributors)
 
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
 
-## Laravel Package Boilerplate
-
-This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).

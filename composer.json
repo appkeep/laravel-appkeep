@@ -1,12 +1,12 @@
 {
-    "name": "appkeep/eye",
-    "description": "Confidently deploy Laravel apps.",
+    "name": "appkeep/laravel-appkeep",
+    "description": "Deploy Laravel confidently.",
     "keywords": [
         "appkeep",
         "appkee-eye",
         "appkeep"
     ],
-    "homepage": "https://github.com/appkeep/eye",
+    "homepage": "https://github.com/appkeep/laravel-appkeep",
     "license": "MIT",
     "type": "library",
     "authors": [
