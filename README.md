@@ -10,18 +10,67 @@ This is the official Laravel SDK for [App:keep](https://appkeep.dev)
 
 ## Installation
 
-You can install the package via composer:
+Install the package via composer:
 
 ```bash
 composer require appkeep/laravel-appkeep
 ```
 
-## Usage
+Add the project key you obtain from Appkeep to your .env file:
 
-TBD
+```dotenv
+APPKEEP_PROJECT_KEY=<your-project-key>
+```
+
+> 🚨 Make sure you have set up scheduled commands (`php artisan schedule:run`). Appkeep relies on Laravel's schedule runner to work.
+
+https://laravel.com/docs/9.x/scheduling#running-the-scheduler
+
+## Set up health checks
 
 ```php
-// Usage description here
+// 1. Import this trait
+use Appkeep\Laravel\Concerns\RunsChecks;
+
+class AppServiceProvider extends ServiceProvider
+{
+    // 2. Add this trait to your class
+    use RunsChecks;
+
+    // ...
+
+    public function boot()
+    {
+        // 3. Insert these lines
+        if ($this->app->runningInConsole()) {
+            $this->registerDefaultChecks();
+        }
+    }
+```
+
+## Advanced
+
+### List of checks
+
+Run this command to see a list of configured health checks:
+
+```bash
+php artisan appkeep:checks
+
+# +----------------+------------+
+# | Check          | Expression |
+# +----------------+------------+
+# | DatabaseCheck  | * * * * *  |
+# | DiskUsageCheck | * * * * *  |
+# +----------------+------------+
+```
+
+### One application, multiple servers
+
+If you are running your Laravel site on multiple hosts behind a load balancer, simply put the respective name of each host in your .env file.
+
+```dotenv
+APPKEEP_SERVER_NAME=eu-server1
 ```
 
 ### Writing your own checks
