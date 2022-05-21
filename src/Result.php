@@ -1,8 +1,8 @@
 <?php
 
-namespace Appkeep\Eye;
+namespace Appkeep\Laravel;
 
-use Appkeep\Eye\Enums\Status;
+use Appkeep\Laravel\Enums\Status;
 
 class Result
 {

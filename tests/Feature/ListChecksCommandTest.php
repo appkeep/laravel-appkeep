@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Tests\TestCheck;
-use Appkeep\Eye\Appkeep;
+use Appkeep\Laravel\Appkeep;
 
 class ListChecksCommandTest extends TestCase
 {

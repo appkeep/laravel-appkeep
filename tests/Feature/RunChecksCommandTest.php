@@ -5,8 +5,8 @@ namespace Tests\Feature;
 use Carbon\Carbon;
 use Tests\TestCase;
 use Tests\TestCheck;
-use Appkeep\Eye\Result;
-use Appkeep\Eye\Appkeep;
+use Appkeep\Laravel\Result;
+use Appkeep\Laravel\Appkeep;
 use Illuminate\Support\Facades\Http;
 
 class RunChecksCommandTest extends TestCase

@@ -1,10 +1,10 @@
 <?php
 
-namespace Appkeep\Eye\Checks;
+namespace Appkeep\Laravel\Checks;
 
 use Exception;
-use Appkeep\Eye\Check;
-use Appkeep\Eye\Result;
+use Appkeep\Laravel\Check;
+use Appkeep\Laravel\Result;
 use Laravel\Horizon\Contracts\MasterSupervisorRepository;
 
 class HorizonCheck extends Check

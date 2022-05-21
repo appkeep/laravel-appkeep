@@ -1,6 +1,6 @@
 <?php
 
-namespace Appkeep\Eye\Tasks;
+namespace Appkeep\Laravel\Tasks;
 
 use Illuminate\Console\Scheduling\Event;
 

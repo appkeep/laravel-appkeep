@@ -1,8 +1,8 @@
 <?php
 
-namespace Appkeep\Eye\Commands;
+namespace Appkeep\Laravel\Commands;
 
-use Appkeep\Eye\Appkeep;
+use Appkeep\Laravel\Appkeep;
 use Illuminate\Console\Command;
 
 class ListChecksCommand extends Command

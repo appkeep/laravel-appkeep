@@ -1,11 +1,11 @@
 <?php
 
-namespace Appkeep\Eye\Commands;
+namespace Appkeep\Laravel\Commands;
 
-use Appkeep\Eye\Result;
-use Appkeep\Eye\Appkeep;
-use Appkeep\Eye\Enums\Status;
+use Appkeep\Laravel\Result;
+use Appkeep\Laravel\Appkeep;
 use Illuminate\Console\Command;
+use Appkeep\Laravel\Enums\Status;
 use Illuminate\Support\Facades\Http;
 
 class RunChecksCommand extends Command

@@ -1,13 +1,13 @@
 <?php
 
-namespace Appkeep\Eye;
+namespace Appkeep\Laravel;
 
 use Illuminate\Support\ServiceProvider;
-use Appkeep\Eye\Commands\RunChecksCommand;
-use Appkeep\Eye\Commands\ListChecksCommand;
 use Illuminate\Console\Scheduling\Schedule;
+use Appkeep\Laravel\Commands\RunChecksCommand;
+use Appkeep\Laravel\Commands\ListChecksCommand;
 
-class EyeServiceProvider extends ServiceProvider
+class AppkeepServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use Appkeep\Eye\Check;
-use Appkeep\Eye\Result;
+use Appkeep\Laravel\Check;
+use Appkeep\Laravel\Result;
 
 class TestCheck extends Check
 {

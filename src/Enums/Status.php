@@ -1,6 +1,6 @@
 <?php
 
-namespace Appkeep\Eye\Enums;
+namespace Appkeep\Laravel\Enums;
 
 class Status
 {

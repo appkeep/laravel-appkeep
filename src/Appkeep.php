@@ -1,6 +1,6 @@
 <?php
 
-namespace Appkeep\Eye;
+namespace Appkeep\Laravel;
 
 use InvalidArgumentException;
 

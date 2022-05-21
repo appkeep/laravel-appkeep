@@ -1,6 +1,6 @@
 <?php
 
-namespace Appkeep\Eye;
+namespace Appkeep\Laravel;
 
 use Cron\CronExpression;
 use Illuminate\Support\Facades\Date;

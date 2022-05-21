@@ -1,11 +1,11 @@
 <?php
 
-namespace Appkeep\Eye\Concerns;
+namespace Appkeep\Laravel\Concerns;
 
-use Appkeep\Eye\Check;
-use Appkeep\Eye\Appkeep;
-use Appkeep\Eye\Checks\DatabaseCheck;
-use Appkeep\Eye\Checks\DiskUsageCheck;
+use Appkeep\Laravel\Check;
+use Appkeep\Laravel\Appkeep;
+use Appkeep\Laravel\Checks\DatabaseCheck;
+use Appkeep\Laravel\Checks\DiskUsageCheck;
 
 trait RunsChecks
 {
