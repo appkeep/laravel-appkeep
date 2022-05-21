@@ -11,7 +11,7 @@ return [
     /**
      * Make sure to set this in your .env file.
      */
-    'key' => env('APPKEEP_PROJECT_KEY'),
+    'key' => env('APPKEEP_KEY'),
 
     /**
      * Name of your server.

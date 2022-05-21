@@ -19,7 +19,7 @@ composer require appkeep/laravel-appkeep
 Add the project key you obtain from Appkeep to your .env file:
 
 ```dotenv
-APPKEEP_PROJECT_KEY=<your-project-key>
+APPKEEP_KEY=<your-project-key>
 ```
 
 > 🚨 Make sure you have set up scheduled commands (`php artisan schedule:run`). Appkeep relies on Laravel's schedule runner to work.
@@ -93,4 +93,3 @@ If you discover any security related issues, please email hello@swiftmade.co ins
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
