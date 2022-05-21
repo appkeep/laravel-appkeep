@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class ListChecksCommand extends Command
 {
-    protected $name = 'eye:list';
+    protected $name = 'appkeep:checks';
     protected $description = 'List all Appkeep checks';
 
     public function handle()

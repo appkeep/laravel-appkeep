@@ -16,7 +16,7 @@ class RunChecksCommandTest extends TestCase
      */
     public function the_check_command_is_registered()
     {
-        $this->artisan('eye:check')->expectsOutput('No checks are due to run.');
+        $this->artisan('appkeep:run')->expectsOutput('No checks are due to run.');
     }
 
     /**
@@ -37,7 +37,7 @@ class RunChecksCommandTest extends TestCase
             ),
         ]);
 
-        $this->artisan('eye:check')->expectsTable(
+        $this->artisan('appkeep:run')->expectsTable(
             ['Check', 'Outcome', 'Message'],
             [
                 ['bar', '✅ 50%', ''],
@@ -63,7 +63,7 @@ class RunChecksCommandTest extends TestCase
         ]);
 
         // Prevent hitting Appkeep server.
-        $this->artisan('eye:check')->assertExitCode(0);
+        $this->artisan('appkeep:run')->assertExitCode(0);
 
         // Assert that only one check ran.
         Http::assertSent(function ($request) {
@@ -75,7 +75,7 @@ class RunChecksCommandTest extends TestCase
 
         Carbon::setTestNow(Carbon::now()->setMinute(15)->setSecond(0));
 
-        $this->artisan('eye:check')->assertExitCode(0);
+        $this->artisan('appkeep:run')->assertExitCode(0);
 
         // Assert that both checks ran.
         Http::assertSent(function ($request) {

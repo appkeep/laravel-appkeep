@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 
 class RunChecksCommand extends Command
 {
-    protected $name = 'eye:check';
+    protected $name = 'appkeep:run';
     protected $description = 'Run all Appkeep checks';
 
     public function handle()

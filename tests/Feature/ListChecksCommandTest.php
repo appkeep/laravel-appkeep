@@ -13,7 +13,7 @@ class ListChecksCommandTest extends TestCase
      */
     public function the_list_command_is_registered()
     {
-        $this->artisan('eye:list')->expectsOutput('No checks are set up.');
+        $this->artisan('appkeep:checks')->expectsOutput('No checks are set up.');
     }
 
     /**
@@ -28,7 +28,7 @@ class ListChecksCommandTest extends TestCase
             TestCheck::make('baz')->dailyAt('12:00'),
         ]);
 
-        $this->artisan('eye:list')->assertExitCode(0)->expectsTable(
+        $this->artisan('appkeep:checks')->assertExitCode(0)->expectsTable(
             ['Check', 'Expression'],
             [
                 ['bar', '*/15 * * * *'],

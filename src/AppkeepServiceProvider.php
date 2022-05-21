@@ -30,7 +30,7 @@ class AppkeepServiceProvider extends ServiceProvider
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
 
-            $schedule->command('eye:check')
+            $schedule->command('appkeep:run')
                 ->everyMinute()
                 ->runInBackground();
         });
