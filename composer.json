@@ -7,7 +7,7 @@
         "appkeep"
     ],
     "homepage": "https://github.com/appkeep/laravel-appkeep",
-    "license": "MIT",
+    "license": "Apache-2.0",
     "type": "library",
     "authors": [
         {
