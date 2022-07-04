@@ -29,7 +29,7 @@ php artisan appkeep:init
 
 This will publish the config file and configure default checks. You can later change these default checks from `app/Providers/AppkeepProvider.php`.
 
-### On Production
+💡 **Important:** Execute the following steps on your production environment.
 
 #### 3. Set up a cronjob
 
@@ -45,7 +45,7 @@ To sign in / register and create a project key, simply run:
 php artisan appkeep:login
 ```
 
-## Commands
+## Commands
 
 Here's other commands that you might find useful:
 
@@ -64,7 +64,38 @@ php artisan appkeep:list
 # +----------------+------------+
 ```
 
+## Advanced
+
 ### Customize checks
+
+By default, Appkeep will register some default checks for you with some sensible defaults. You can adjust their warning and failure tresholds, or register your own checks in your `app/Providers/AppServiceProvider.php` file.
+
+```php
+<?php
+
+namespace App\Providers;
+
+use Appkeep\Laravel\Checks\DiskUsageCheck;
+use Appkeep\Laravel\Facades\Appkeep;
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    public function boot()
+    {
+        // Uncomment this to remove all default checks
+        // Appkeep::forgetDefaultChecks();
+
+        Appkeep::checks([
+            DiskUsageCheck::make()
+                ->warnIfUsedPercentageIsAbove(60)
+                ->failIfUsedPercentageIsAbove(70),
+
+            // Register other checks, including custom ones...
+        ]);
+    }
+}
+```
 
 ### One application, multiple servers
 
