@@ -17,9 +17,7 @@ trait RegistersDefaultChecks
 
             DatabaseCheck::make(),
 
-            DiskUsageCheck::make()
-                ->warnIfUsedPercentageIsAbove(20)
-                ->failIfUsedPercentageIsAbove(80),
+            DiskUsageCheck::make(),
         ]);
     }
 }

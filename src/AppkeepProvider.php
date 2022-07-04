@@ -56,6 +56,8 @@ class AppkeepProvider extends ServiceProvider
             InitCommand::class,
             LoginCommand::class,
         ]);
+
+        $this->scheduleRunCommand();
     }
 
     protected function scheduleRunCommand()
