@@ -10,6 +10,11 @@ This is the official Laravel SDK for [App:keep](https://appkeep.co)
 
 ## Installation
 
+- **Supported PHP versions**: 7.4, 8.0, 8.1
+- **Supported Laravel versions**: 7.x, 8.x, 9.x
+
+Working with a different framework/PHP version? Shoot us an email at [hello@appkeep.co](mailto:hello@appkeep.co).
+
 #### 1. Install the package via composer:
 
 ```bash
