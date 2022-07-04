@@ -4,20 +4,39 @@ namespace Appkeep\Laravel;
 
 use InvalidArgumentException;
 
-class Appkeep
+class AppkeepService
 {
     public $checks = [];
 
-    public function checks(array $checks)
+    public function forgetDefaultChecks()
     {
+        $this->checks = [];
+
+        return $this;
+    }
+
+    public function checks(array $checks = [], $replace = false)
+    {
+        if (! app()->runningInConsole()) {
+            return;
+        }
+
         foreach ($checks as $check) {
             $this->rejectIfDoesNotExtendBaseClass($check);
-            $this->rejectIfDuplicate($check);
+
+            if (! $replace) {
+                $this->rejectIfDuplicate($check);
+            }
 
             $this->checks[$check->name] = $check;
         }
 
-        return $this;
+        return collect($this->checks);
+    }
+
+    public function replaceChecks(array $checks = [])
+    {
+        return $this->checks($checks, true);
     }
 
     protected function rejectIfDoesNotExtendBaseClass($check)

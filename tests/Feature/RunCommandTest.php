@@ -6,16 +6,18 @@ use Carbon\Carbon;
 use Tests\TestCase;
 use Tests\TestCheck;
 use Appkeep\Laravel\Result;
-use Appkeep\Laravel\Appkeep;
+use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\Facades\Http;
 
-class RunChecksCommandTest extends TestCase
+class RunCommandTest extends TestCase
 {
     /**
      * @test
      */
     public function the_check_command_is_registered()
     {
+        Appkeep::forgetDefaultChecks();
+
         $this->artisan('appkeep:run')->expectsOutput('No checks are due to run.');
     }
 
@@ -26,9 +28,7 @@ class RunChecksCommandTest extends TestCase
     {
         Http::fake();
 
-        $appkeep = resolve(Appkeep::class);
-
-        $appkeep->checks([
+        Appkeep::forgetDefaultChecks()->checks([
             TestCheck::make('bar')->result(
                 Result::ok()->summary('50%')
             ),
@@ -53,11 +53,9 @@ class RunChecksCommandTest extends TestCase
     {
         Http::fake();
 
-        $appkeep = resolve(Appkeep::class);
-
         Carbon::setTestNow(Carbon::now()->setMinute(3)->setSecond(0));
 
-        $appkeep->checks([
+        Appkeep::forgetDefaultChecks()->checks([
             TestCheck::make('test-check-1')->everyMinute(),
             TestCheck::make('test-check-15')->everyFifteenMinutes(),
         ]);

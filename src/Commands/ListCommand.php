@@ -2,18 +2,17 @@
 
 namespace Appkeep\Laravel\Commands;
 
-use Appkeep\Laravel\Appkeep;
 use Illuminate\Console\Command;
+use Appkeep\Laravel\Facades\Appkeep;
 
-class ListChecksCommand extends Command
+class ListCommand extends Command
 {
-    protected $name = 'appkeep:checks';
+    protected $name = 'appkeep:list';
     protected $description = 'List all Appkeep checks';
 
     public function handle()
     {
-        $appkeep = resolve(Appkeep::class);
-        $checks = collect($appkeep->checks);
+        $checks = Appkeep::checks();
 
         if ($checks->isEmpty()) {
             $this->info('No checks are set up.');

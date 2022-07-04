@@ -3,20 +3,19 @@
 namespace Appkeep\Laravel\Commands;
 
 use Appkeep\Laravel\Result;
-use Appkeep\Laravel\Appkeep;
 use Illuminate\Console\Command;
 use Appkeep\Laravel\Enums\Status;
+use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\Facades\Http;
 
-class RunChecksCommand extends Command
+class RunCommand extends Command
 {
     protected $name = 'appkeep:run';
     protected $description = 'Run all Appkeep checks';
 
     public function handle()
     {
-        $appkeep = resolve(Appkeep::class);
-        $checks = collect($appkeep->checks)->filter->isDue();
+        $checks = Appkeep::checks()->filter->isDue();
 
         if ($checks->isEmpty()) {
             $this->info('No checks are due to run.');
