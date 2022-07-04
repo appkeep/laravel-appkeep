@@ -4,11 +4,18 @@ namespace Appkeep\Laravel;
 
 use InvalidArgumentException;
 
-class Appkeep
+class AppkeepService
 {
     public $checks = [];
 
-    public function checks(array $checks)
+    public function forgetDefaultChecks()
+    {
+        $this->checks = [];
+
+        return $this;
+    }
+
+    public function checks(array $checks = [])
     {
         foreach ($checks as $check) {
             $this->rejectIfDoesNotExtendBaseClass($check);
@@ -17,7 +24,7 @@ class Appkeep
             $this->checks[$check->name] = $check;
         }
 
-        return $this;
+        return collect($this->checks);
     }
 
     protected function rejectIfDoesNotExtendBaseClass($check)

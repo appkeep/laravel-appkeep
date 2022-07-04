@@ -51,8 +51,11 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Appkeep\\Laravel\\AppkeepServiceProvider"
-            ]
+                "Appkeep\\Laravel\\AppkeepProvider"
+            ],
+            "aliases": {
+                "Appkeep": "Appkeep\\Laravel\\Facades\\Appkeep"
+            }
         }
     }
 }

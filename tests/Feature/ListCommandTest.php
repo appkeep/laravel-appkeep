@@ -4,7 +4,7 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Tests\TestCheck;
-use Appkeep\Laravel\Appkeep;
+use Appkeep\Laravel\Facades\Appkeep;
 
 class ListCommandTest extends TestCase
 {
@@ -13,6 +13,8 @@ class ListCommandTest extends TestCase
      */
     public function the_list_command_is_registered()
     {
+        Appkeep::forgetDefaultChecks();
+
         $this->artisan('appkeep:list')->expectsOutput('No checks are set up.');
     }
 
@@ -21,9 +23,7 @@ class ListCommandTest extends TestCase
      */
     public function it_returns_a_table_output()
     {
-        $appkeep = resolve(Appkeep::class);
-
-        $appkeep->checks([
+        Appkeep::forgetDefaultChecks()->checks([
             TestCheck::make('bar')->everyFifteenMinutes(),
             TestCheck::make('baz')->dailyAt('12:00'),
         ]);

@@ -10,52 +10,46 @@ This is the official Laravel SDK for [App:keep](https://appkeep.co)
 
 ## Installation
 
-Install the package via composer:
+#### 1. Install the package via composer:
 
 ```bash
 composer require appkeep/laravel-appkeep
 ```
 
-Add the project key you obtain from Appkeep to your .env file:
+#### 2. Initialize Appkeep
 
-```dotenv
-APPKEEP_KEY=<your-project-key>
+```bash
+php artisan appkeep:init
 ```
 
-> 🚨 Make sure you have set up scheduled commands (`php artisan schedule:run`). Appkeep relies on Laravel's schedule runner to work.
+This will publish the config file and configure default checks. You can later change these default checks from `app/Providers/AppkeepProvider.php`.
 
-https://laravel.com/docs/9.x/scheduling#running-the-scheduler
+### On Production
 
-## Set up health checks
+#### 3. Set up a cronjob
 
-```php
-// 1. Import this trait
-use Appkeep\Laravel\Concerns\RunsChecks;
+Make sure you have a cronjob that runs `php artisan schedule:run` every minute. App:keep relies on Laravel's scheduler. See Laravel's [documentation](https://laravel.com/docs/9.x/scheduling#running-the-scheduler) to learn more.
 
-class AppServiceProvider extends ServiceProvider
-{
-    // 2. Add this trait to your class
-    use RunsChecks;
+#### 4. Sign in to Appkeep
 
-    // ...
+This step simply helps set your `APPKEEP_KEY` env variable. If you know the key, you can add it into your `.env` file yourself.
 
-    public function boot()
-    {
-        // 3. Insert these lines
-        if ($this->app->runningInConsole()) {
-            $this->registerDefaultChecks();
-        }
-    }
+To sign in / register and create a project key, simply run:
+
+```bash
+php artisan appkeep:login
 ```
 
-## Advanced
+## Commands
 
-### List of checks
+Here's other commands that you might find useful:
+
+### List all checks
 
 Run this command to see a list of configured health checks:
 
 ```bash
-php artisan appkeep:checks
+php artisan appkeep:list
 
 # +----------------+------------+
 # | Check          | Expression |
@@ -64,6 +58,8 @@ php artisan appkeep:checks
 # | DiskUsageCheck | * * * * *  |
 # +----------------+------------+
 ```
+
+### Customize checks
 
 ### One application, multiple servers
 
