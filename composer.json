@@ -7,14 +7,13 @@
         "monitoring",
         "health-checks"
     ],
-    "homepage": "https://github.com/appkeep/laravel-appkeep",
-    "license": "Apache-2.0",
+    "homepage": "https://appkeep.co",
+    "license": "BSD-3-Clause",
     "type": "library",
     "authors": [
         {
             "name": "Appkeep",
-            "email": "hello@appkeep.co",
-            "role": "Developer"
+            "email": "hello@appkeep.co"
         }
     ],
     "require": {
