@@ -12,6 +12,15 @@ class InitCommand extends Command
 
     public function handle()
     {
+        if (file_exists(config_path('appkeep.php'))) {
+            $this->info('Config file is already published.');
+
+            return;
+        }
+
+        $this->comment('Publishing Appkeep config file...');
         Artisan::call('vendor:publish', ['--provider' => 'Appkeep\Laravel\AppkeepProvider']);
+
+        $this->info('Config file is published.');
     }
 }
