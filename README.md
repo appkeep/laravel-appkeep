@@ -124,4 +124,4 @@ If you discover any security related issues, please email hello@swiftmade.co ins
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+The BSD-3-Clause License (BSD-3). Please see [License File](LICENSE.md) for more information.
