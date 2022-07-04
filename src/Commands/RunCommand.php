@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 use Appkeep\Laravel\Enums\Status;
 use Illuminate\Support\Facades\Http;
 
-class RunChecksCommand extends Command
+class RunCommand extends Command
 {
     protected $name = 'appkeep:run';
     protected $description = 'Run all Appkeep checks';

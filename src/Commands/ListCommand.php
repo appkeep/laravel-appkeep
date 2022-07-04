@@ -5,7 +5,7 @@ namespace Appkeep\Laravel\Commands;
 use Appkeep\Laravel\Appkeep;
 use Illuminate\Console\Command;
 
-class ListChecksCommand extends Command
+class ListCommand extends Command
 {
     protected $name = 'appkeep:list';
     protected $description = 'List all Appkeep checks';

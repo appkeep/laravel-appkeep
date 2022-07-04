@@ -6,7 +6,7 @@ use Tests\TestCase;
 use Tests\TestCheck;
 use Appkeep\Laravel\Appkeep;
 
-class ListChecksCommandTest extends TestCase
+class ListCommandTest extends TestCase
 {
     /**
      * @test

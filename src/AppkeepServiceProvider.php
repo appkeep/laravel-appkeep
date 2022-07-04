@@ -3,9 +3,9 @@
 namespace Appkeep\Laravel;
 
 use Illuminate\Support\ServiceProvider;
+use Appkeep\Laravel\Commands\RunCommand;
+use Appkeep\Laravel\Commands\ListCommand;
 use Illuminate\Console\Scheduling\Schedule;
-use Appkeep\Laravel\Commands\RunChecksCommand;
-use Appkeep\Laravel\Commands\ListChecksCommand;
 
 class AppkeepServiceProvider extends ServiceProvider
 {
@@ -23,8 +23,8 @@ class AppkeepServiceProvider extends ServiceProvider
         ], 'config');
 
         $this->commands([
-            ListChecksCommand::class,
-            RunChecksCommand::class,
+            ListCommand::class,
+            RunCommand::class,
         ]);
 
         $this->app->booted(function () {

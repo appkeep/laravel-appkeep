@@ -9,7 +9,7 @@ use Appkeep\Laravel\Result;
 use Appkeep\Laravel\Appkeep;
 use Illuminate\Support\Facades\Http;
 
-class RunChecksCommandTest extends TestCase
+class RunCommandTest extends TestCase
 {
     /**
      * @test
