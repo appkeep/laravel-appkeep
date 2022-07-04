@@ -1,10 +1,11 @@
 {
     "name": "appkeep/laravel-appkeep",
-    "description": "Deploy Laravel confidently.",
+    "description": "Instantly discover problems with your Laravel sites.",
     "keywords": [
         "appkeep",
-        "appkee-eye",
-        "appkeep"
+        "laravel",
+        "monitoring",
+        "health-checks"
     ],
     "homepage": "https://github.com/appkeep/laravel-appkeep",
     "license": "Apache-2.0",
@@ -12,7 +13,7 @@
     "authors": [
         {
             "name": "Appkeep",
-            "email": "hello@appkeep.dev",
+            "email": "hello@appkeep.co",
             "role": "Developer"
         }
     ],
