@@ -3,24 +3,39 @@
 namespace Appkeep\Laravel\Commands;
 
 use Illuminate\Console\Command;
+use Appkeep\Laravel\Diagnostics\Server;
 use Illuminate\Support\Facades\Artisan;
 
 class InitCommand extends Command
 {
-    protected $name = 'appkeep:init';
+    protected $signature = 'appkeep:init {--force} {--debug}';
     protected $description = 'Publishes config file and service provider.';
 
     public function handle()
     {
+        if ($this->option('force')) {
+            unlink(config_path('appkeep.php'));
+        }
+
         if (file_exists(config_path('appkeep.php'))) {
             $this->info('Config file is already published.');
 
-            return;
+            return $this->output();
         }
 
         $this->comment('Publishing Appkeep config file...');
         Artisan::call('vendor:publish', ['--provider' => 'Appkeep\Laravel\AppkeepProvider']);
 
         $this->info('Config file is published.');
+        $this->output();
+    }
+
+    private function output()
+    {
+        if ($this->option('debug')) {
+            $this->table(['Key', 'Value'], [
+                ['Server ID', Server::uniqueIdentifier()],
+            ]);
+        }
     }
 }

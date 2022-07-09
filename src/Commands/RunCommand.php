@@ -5,17 +5,25 @@ namespace Appkeep\Laravel\Commands;
 use Appkeep\Laravel\Result;
 use Illuminate\Console\Command;
 use Appkeep\Laravel\Enums\Status;
+use Appkeep\Laravel\Diagnostics\Git;
 use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\Facades\Http;
+use Appkeep\Laravel\Diagnostics\Server;
+use Appkeep\Laravel\Diagnostics\Laravel;
 
 class RunCommand extends Command
 {
-    protected $name = 'appkeep:run';
+    protected $signature = 'appkeep:run {--all}';
     protected $description = 'Run all Appkeep checks';
 
     public function handle()
     {
-        $checks = Appkeep::checks()->filter->isDue();
+        $checks = Appkeep::checks();
+
+        // Unless it's in force mode, only run the checks that are due.
+        if (! $this->option('all')) {
+            $checks = $checks->filter->isDue();
+        }
 
         if ($checks->isEmpty()) {
             $this->info('No checks are due to run.');
@@ -34,7 +42,6 @@ class RunCommand extends Command
             } finally {
                 $results[] = [
                     'check' => $check->name,
-                    'server' => config('appkeep.server'),
                     'result' => [
                         'status' => $result->status,
                         'message' => $result->message,
@@ -59,8 +66,23 @@ class RunCommand extends Command
 
     private function postResultsToAppkeep($results)
     {
-        Http::withHeaders(['Authorization' => sprintf('Bearer %s', config('appkeep.key'))])
+        Http::withHeaders([
+            'Authorization' => sprintf('Bearer %s', config('appkeep.key')),
+            'Accept' => 'application/json',
+        ])
             ->post(config('appkeep.endpoint'), [
+                'server' => [
+                    'uid' => Server::uniqueIdentifier(),
+                    'name' => Server::name(),
+                    'os' => Server::os(),
+                ],
+                'laravel' => [
+                    'version' => Laravel::version(),
+                ],
+                'git' => ($hash = Git::shortCommitHash()) ? [
+                    'commit' => $hash,
+                    'url' => Git::remoteUrl(),
+                ] : null,
                 'checks' => $results,
             ])
             ->throw();
