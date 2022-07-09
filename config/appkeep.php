@@ -14,8 +14,11 @@ return [
     'key' => env('APPKEEP_KEY'),
 
     /**
-     * Name of your server.
-     * Useful if you have multiple servers or running multiple apps on the same server.
+     * This is handled by the package out of the box.
+     *
+     * But if the default method doesn't work for you,
+     * you can provide your own a UUIDv4 value string.
+     * @see vendor/appkeep/laravel-appkeep/src/Diagnostics/Server.php
      */
-    'server' => env('APPKEEP_SERVER_NAME', 'default'),
+    'server' => env('APPKEEP_SERVER_UID'),
 ];
