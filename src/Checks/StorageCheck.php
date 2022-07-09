@@ -29,7 +29,7 @@ class StorageCheck extends Check
      */
     public function run()
     {
-        $disk = $this->disk ?? config('filesytems.default');
+        $disk = $this->disk ?: config('filesystems.default');
 
         $result = (new Result(Status::OK))->meta([
             'disk' => $disk,
