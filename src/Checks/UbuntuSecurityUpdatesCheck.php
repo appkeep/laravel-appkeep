@@ -28,8 +28,8 @@ class UbuntuSecurityUpdatesCheck extends Check
                 // extract number from text
                 $number = preg_replace('/[^0-9]/', '', $line);
 
-                return Result::warn('Pending security updates for Ubuntu')
-                    ->summary('There are ' . $number . ' pending security updates.');
+                return Result::warn('You have ' . $number . ' pending security updates for Ubuntu')
+                    ->summary($number);
             }
         }
 
