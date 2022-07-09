@@ -41,12 +41,6 @@ class RunCommand extends Command
             } finally {
                 $results[] = [
                     'check' => $check->name,
-                    'server' => [
-                        'uid' => Server::uniqueIdentifier(),
-                    ],
-                    'laravel' => [
-                        'version' => Laravel::version(),
-                    ],
                     'result' => [
                         'status' => $result->status,
                         'message' => $result->message,
@@ -73,6 +67,12 @@ class RunCommand extends Command
     {
         Http::withHeaders(['Authorization' => sprintf('Bearer %s', config('appkeep.key'))])
             ->post(config('appkeep.endpoint'), [
+                'server' => [
+                    'uid' => Server::uniqueIdentifier(),
+                ],
+                'laravel' => [
+                    'version' => Laravel::version(),
+                ],
                 'checks' => $results,
             ])
             ->throw();
