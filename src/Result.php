@@ -59,10 +59,29 @@ class Result
         return $this;
     }
 
+    public function status($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function message($message)
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
     public function summary($summary)
     {
         $this->summary = $summary;
 
         return $this;
+    }
+
+    public function failWith($message)
+    {
+        return $this->status(Status::FAIL)->message($message);
     }
 }
