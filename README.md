@@ -97,14 +97,6 @@ class AppServiceProvider extends ServiceProvider
 }
 ```
 
-### One application, multiple servers
-
-If you are running your Laravel site on multiple hosts behind a load balancer, simply put the respective name of each host in your .env file.
-
-```dotenv
-APPKEEP_SERVER_NAME=eu-server1
-```
-
 ### Writing your own checks
 
 TBD
