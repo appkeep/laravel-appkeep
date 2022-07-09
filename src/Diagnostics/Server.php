@@ -52,4 +52,9 @@ class Server
 
         return ($fqdn !== 'localhost') ? $fqdn : gethostname();
     }
+
+    public static function isUbuntu()
+    {
+        return strpos(strtolower(php_uname()), 'ubuntu') !== false;
+    }
 }
