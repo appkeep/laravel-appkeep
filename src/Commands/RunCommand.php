@@ -5,6 +5,7 @@ namespace Appkeep\Laravel\Commands;
 use Appkeep\Laravel\Result;
 use Illuminate\Console\Command;
 use Appkeep\Laravel\Enums\Status;
+use Appkeep\Laravel\Diagnostics\Git;
 use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\Facades\Http;
 use Appkeep\Laravel\Diagnostics\Server;
@@ -72,10 +73,16 @@ class RunCommand extends Command
             ->post(config('appkeep.endpoint'), [
                 'server' => [
                     'uid' => Server::uniqueIdentifier(),
+                    'name' => Server::name(),
+                    'os' => Server::os(),
                 ],
                 'laravel' => [
                     'version' => Laravel::version(),
                 ],
+                'git' => ($hash = Git::shortCommitHash()) ? [
+                    'commit' => $hash,
+                    'url' => Git::remoteUrl(),
+                ] : null,
                 'checks' => $results,
             ])
             ->throw();

@@ -4,6 +4,24 @@ namespace Appkeep\Laravel\Diagnostics;
 
 class Server
 {
+    public static function name()
+    {
+        return gethostname();
+    }
+
+    public static function os()
+    {
+        if (PHP_OS !== 'Linux') {
+            return PHP_OS;
+        }
+
+        return rescue(function () {
+            return @parse_ini_string(shell_exec('cat /etc/lsb-release 2> /dev/null'))['DISTRIB_DESCRIPTION'];
+        }, function ($e) {
+            return PHP_OS;
+        });
+    }
+
     public static function uniqueIdentifier()
     {
         if ($uuid = config('appkeep.server')) {
