@@ -65,7 +65,10 @@ class RunCommand extends Command
 
     private function postResultsToAppkeep($results)
     {
-        Http::withHeaders(['Authorization' => sprintf('Bearer %s', config('appkeep.key'))])
+        Http::withHeaders([
+            'Authorization' => sprintf('Bearer %s', config('appkeep.key')),
+            'Accept' => 'application/json',
+        ])
             ->post(config('appkeep.endpoint'), [
                 'server' => [
                     'uid' => Server::uniqueIdentifier(),
