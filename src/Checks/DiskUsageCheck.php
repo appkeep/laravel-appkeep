@@ -7,8 +7,8 @@ use Appkeep\Laravel\Result;
 
 class DiskUsageCheck extends Check
 {
-    protected $warnAt = 55;
-    protected $failAt = 80;
+    protected $warnAt = 70;
+    protected $failAt = 90;
 
     public function warnIfUsedPercentageIsAbove($value)
     {
