@@ -7,10 +7,11 @@ use Illuminate\Console\Command;
 use Appkeep\Laravel\Enums\Status;
 use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\Facades\Http;
+use Appkeep\Laravel\Diagnostics\Server;
 
 class RunCommand extends Command
 {
-    protected $name = 'appkeep:run';
+    protected $signature = 'appkeep:run';
     protected $description = 'Run all Appkeep checks';
 
     public function handle()
@@ -34,7 +35,7 @@ class RunCommand extends Command
             } finally {
                 $results[] = [
                     'check' => $check->name,
-                    'server' => config('appkeep.server'),
+                    'server' => Server::uniqueIdentifier(),
                     'result' => [
                         'status' => $result->status,
                         'message' => $result->message,

@@ -7,7 +7,7 @@ use Appkeep\Laravel\Facades\Appkeep;
 
 class ListCommand extends Command
 {
-    protected $name = 'appkeep:list';
+    protected $signature = 'appkeep:list';
     protected $description = 'List all Appkeep checks';
 
     public function handle()

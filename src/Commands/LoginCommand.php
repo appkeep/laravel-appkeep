@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class LoginCommand extends Command
 {
-    protected $name = 'appkeep:login';
+    protected $signature = 'appkeep:login';
     protected $description = 'Sign in/register to Appkeep and create a project key.';
 
     public function handle()
