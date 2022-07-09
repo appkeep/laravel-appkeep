@@ -8,6 +8,7 @@ use Appkeep\Laravel\Enums\Status;
 use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\Facades\Http;
 use Appkeep\Laravel\Diagnostics\Server;
+use Appkeep\Laravel\Diagnostics\Laravel;
 
 class RunCommand extends Command
 {
@@ -40,7 +41,12 @@ class RunCommand extends Command
             } finally {
                 $results[] = [
                     'check' => $check->name,
-                    'server' => Server::uniqueIdentifier(),
+                    'server' => [
+                        'uid' => Server::uniqueIdentifier(),
+                    ],
+                    'laravel' => [
+                        'version' => Laravel::version(),
+                    ],
                     'result' => [
                         'status' => $result->status,
                         'message' => $result->message,
