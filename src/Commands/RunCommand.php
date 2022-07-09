@@ -11,12 +11,17 @@ use Appkeep\Laravel\Diagnostics\Server;
 
 class RunCommand extends Command
 {
-    protected $signature = 'appkeep:run';
+    protected $signature = 'appkeep:run {--force}';
     protected $description = 'Run all Appkeep checks';
 
     public function handle()
     {
-        $checks = Appkeep::checks()->filter->isDue();
+        $checks = Appkeep::checks();
+
+        // Unless it's in force mode, only run the checks that are due.
+        if (! $this->option('force')) {
+            $checks = $checks->filter->isDue();
+        }
 
         if ($checks->isEmpty()) {
             $this->info('No checks are due to run.');
