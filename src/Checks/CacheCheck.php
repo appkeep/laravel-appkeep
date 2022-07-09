@@ -35,9 +35,7 @@ class CacheCheck extends Check
 
             return $result;
         } catch (Exception $e) {
-            dd($e);
-
-            return $result->failWith("Could not read/write cache");
+            return $result->failWith($e->getMessage());
         }
     }
 
@@ -45,10 +43,10 @@ class CacheCheck extends Check
     {
         $value = time();
 
-        Cache::driver($driver)->put('appkeep:check', $value, 1);
+        Cache::driver($driver)->put('appkeep:check', $value, 5);
 
-        if ($value !== Cache::driver($driver)->pull('appkeep:check')) {
-            throw new Exception('Cache test failed.');
+        if ($value != Cache::driver($driver)->pull('appkeep:check')) {
+            throw new Exception('Could not read/write cache');
         }
     }
 }
