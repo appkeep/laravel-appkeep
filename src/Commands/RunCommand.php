@@ -76,12 +76,13 @@ class RunCommand extends Command
                     'name' => Server::name(),
                     'os' => Server::os(),
                 ],
-                'laravel' => [
-                    'version' => Laravel::version(),
+                'packages' => [
+                    'laravel/framework' => Laravel::version(),
+                    'appkeep/laravel-appkeep' => Appkeep::version(),
                 ],
                 'git' => ($hash = Git::shortCommitHash()) ? [
                     'commit' => $hash,
-                    'url' => Git::remoteUrl(),
+                    'url' => Git::repositoryUrl(),
                 ] : null,
                 'checks' => $results,
             ])
