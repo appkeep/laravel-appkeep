@@ -8,6 +8,11 @@ class AppkeepService
 {
     public $checks = [];
 
+    public function version()
+    {
+        return '0.2.0';
+    }
+
     public function forgetDefaultChecks()
     {
         $this->checks = [];

@@ -19,18 +19,15 @@ class AppkeepProvider extends ServiceProvider
      */
     public function register()
     {
-        if (! $this->app->runningInConsole()) {
-            return;
-        }
-
-        // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__ . '/../config/appkeep.php', 'appkeep');
 
         $this->app->singleton('appkeep', function () {
             return new AppkeepService();
         });
 
-        $this->registerDefaultChecks();
+        if ($this->app->runningInConsole()) {
+            $this->registerDefaultChecks();
+        }
     }
 
     /**
@@ -57,11 +54,6 @@ class AppkeepProvider extends ServiceProvider
             LoginCommand::class,
         ]);
 
-        $this->scheduleRunCommand();
-    }
-
-    protected function scheduleRunCommand()
-    {
         $this->app->booted(function () {
             $schedule = $this->app->make(Schedule::class);
 

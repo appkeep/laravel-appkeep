@@ -22,22 +22,13 @@ class Git
         }
     }
 
-    public static function remoteUrl()
+    public static function repositoryUrl()
     {
         $gitUrl = shell_exec('cd ' . base_path() . ' && git config --get remote.origin.url 2> /dev/null');
 
-        if (! $gitUrl) {
-            return null;
+        // match repository name from remote origin url
+        if (preg_match('/^(?:git@|https:\/\/)([^\/:]+)[\/:](.+)\.git$/', $gitUrl, $matches)) {
+            return 'https://' . $matches[1] . '/' . $matches[2];
         }
-
-        $vcsUrl = trim($gitUrl);
-        $vcsUrl = str_replace(".git", "", $gitUrl);
-        $vcsUrl = str_replace("git@", "", $gitUrl);
-
-        if (strpos($gitUrl, 'https://') !== 0) {
-            $vcsUrl = "https://" . $vcsUrl;
-        }
-
-        return $vcsUrl;
     }
 }
