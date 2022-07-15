@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Appkeep\Laravel\Commands\RunCommand;
 use Appkeep\Laravel\Commands\InitCommand;
 use Appkeep\Laravel\Commands\ListCommand;
+use Appkeep\Laravel\Backups\BackupService;
 use Appkeep\Laravel\Commands\LoginCommand;
 use Appkeep\Laravel\Commands\BackupCommand;
 use Illuminate\Console\Scheduling\Schedule;
@@ -57,11 +58,23 @@ class AppkeepProvider extends ServiceProvider
         ]);
 
         $this->app->booted(function () {
+            // Don't schedule anything if project key is not set.
+            if (! config('appkeep.key')) {
+                return;
+            }
+
             $schedule = $this->app->make(Schedule::class);
 
             $schedule->command('appkeep:run')
                 ->everyMinute()
                 ->runInBackground();
+
+            // Schedule backup tasks, if it's enabled.
+            if (config('appkeep.backups.enabled')) {
+                $backups = $this->app->make(BackupService::class);
+                $backups->applyConfig();
+                $backups->scheduleBackups();
+            }
         });
     }
 }
