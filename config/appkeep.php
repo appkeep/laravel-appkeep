@@ -34,6 +34,11 @@ return [
         'enabled' => env('APPKEEP_BACKUPS_ENABLED', false),
 
         /**
+         * What time you want the backups to run?
+         */
+        'run_at' => env('APPKEEP_BACKUPS_RUN_AT', '02:00'),
+
+        /**
          * The disk names on which the backups will be stored.
          * You can store your backups both on-site and off-site.
          */
