@@ -44,6 +44,9 @@
             "@php ./vendor/bin/testbench package:discover --ansi"
         ]
     },
+    "suggest": {
+        "spatie/laravel-backup": "Appkeep works great with Spatie's laravel-backup package."
+    },
     "config": {
         "sort-packages": true
     },
