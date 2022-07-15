@@ -2,6 +2,8 @@
 
 namespace Appkeep\Laravel\Backups;
 
+use Illuminate\Support\Str;
+use Illuminate\Console\Scheduling\Schedule;
 use Appkeep\Laravel\Backups\Concerns\AppliesConfig;
 
 class BackupService
@@ -10,6 +12,8 @@ class BackupService
 
     public function applyConfig()
     {
+        config()->set('backup.backup.name', Str::snake(config('app.name') . ' backups'));
+
         $this->applyFileConfig();
 
         $this->applyDatabaseConfig();
@@ -21,12 +25,16 @@ class BackupService
         $this->disableNotifications();
     }
 
-    public function scheduleCleanUp()
+    public function scheduleBackups()
     {
         $schedule = app()->make(Schedule::class);
 
         $schedule->command('backup:clean')
-            ->everyMinute()
+            ->dailyAt(config('appkeep.backups.run_at'))
+            ->runInBackground();
+
+        $schedule->command('backup:run')
+            ->dailyAt(config('appkeep.backups.run_at'))
             ->runInBackground();
     }
 }

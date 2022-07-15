@@ -88,9 +88,11 @@ trait AppliesConfig
 
     protected function disableNotifications()
     {
-        config()->set(
-            'backup.notifications.notifications',
-            []
-        );
+        foreach (config('backup.notifications.notifications') as $notification => $via) {
+            config()->set(
+                'backup.notifications.notifications.' . $notification,
+                []
+            );
+        }
     }
 }

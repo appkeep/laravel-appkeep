@@ -71,6 +71,10 @@ class BackupServiceTest extends TestCase
             $this->app['config']->get('backup.cleanup.default_strategy.delete_oldest_backups_when_using_more_megabytes_than'),
         );
 
-        $this->assertEmpty($this->app['config']->get('backup.notifications.notifications'));
+        $notifications = $this->app['config']->get('backup.notifications.notifications');
+
+        foreach ($notifications as $via) {
+            $this->assertEmpty($via);
+        }
     }
 }
