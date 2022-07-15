@@ -5,9 +5,12 @@ namespace Appkeep\Laravel\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Artisan;
+use Appkeep\Laravel\Commands\Concerns\VerifiesProjectKey;
 
 class LoginCommand extends Command
 {
+    use VerifiesProjectKey;
+
     protected $signature = 'appkeep:login';
     protected $description = 'Sign in/register to Appkeep and create a project key.';
 
@@ -67,17 +70,13 @@ class LoginCommand extends Command
             ->post(config('appkeep.endpoint'), [])
             ->status();
 
-        if (403 === $status) {
+        if (! $this->verifyProjectKey($key)) {
             $this->error('Invalid project key.');
-
-            return;
-        }
-
-        if (200 !== $status) {
-            $this->error('Unknown error.');
             $this->line('');
             $this->line('Make sure your project key is valid.');
             $this->line('Reach us at hello@appkeep.co for support.');
+
+            return;
         }
 
         $this->info('Project key is valid, writing it to your .env file...');
