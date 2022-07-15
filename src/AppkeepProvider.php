@@ -7,6 +7,7 @@ use Appkeep\Laravel\Commands\RunCommand;
 use Appkeep\Laravel\Commands\InitCommand;
 use Appkeep\Laravel\Commands\ListCommand;
 use Appkeep\Laravel\Commands\LoginCommand;
+use Appkeep\Laravel\Commands\BackupCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Appkeep\Laravel\Concerns\RegistersDefaultChecks;
 
@@ -52,6 +53,7 @@ class AppkeepProvider extends ServiceProvider
             ListCommand::class,
             InitCommand::class,
             LoginCommand::class,
+            BackupCommand::class,
         ]);
 
         $this->app->booted(function () {
