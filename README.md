@@ -5,6 +5,7 @@ _Instantly discover problems with your Laravel sites._
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/appkeep/laravel-appkeep.svg?style=flat-square)](https://packagist.org/packages/appkeep/laravel-appkeep)
 [![Total Downloads](https://img.shields.io/packagist/dt/appkeep/laravel-appkeep.svg?style=flat-square)](https://packagist.org/packages/appkeep/laravel-appkeep)
 ![GitHub Actions](https://github.com/appkeep/laravel-appkeep/actions/workflows/main.yml/badge.svg)
+[![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://supportukrainenow.org/)
 
 This is the official Laravel SDK for [App:keep](https://appkeep.co)
 
