@@ -8,6 +8,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
     {
         return [
             'Appkeep\Laravel\AppkeepProvider',
+            'Spatie\Backup\BackupServiceProvider',
         ];
     }
 
