@@ -10,7 +10,7 @@ class AppkeepService
 
     public function version()
     {
-        return '0.2.1';
+        return '0.2.2';
     }
 
     public function forgetDefaultChecks()

@@ -27,7 +27,7 @@ class DiskUsageCheck extends Check
     public function run()
     {
         $freeSpace = disk_free_space(base_path());
-        $usedSpace = $freeSpace / disk_total_space(base_path());
+        $usedSpace = 1 - ($freeSpace / disk_total_space(base_path()));
         $usedSpace = round($usedSpace * 100);
 
         $meta = [
