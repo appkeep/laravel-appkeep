@@ -40,6 +40,7 @@ class SendHeartbeat
                 'name' => Server::name(),
                 'os' => Server::os(),
             ],
+            'php' => phpversion(),
             'packages' => [
                 'laravel/framework' => Laravel::version(),
                 'appkeep/laravel-appkeep' => Appkeep::version(),
