@@ -49,7 +49,7 @@ class SendHeartbeat
                 'commit' => $hash,
                 'url' => Git::repositoryUrl(),
             ],
-            'checks' => $checkResults->toArray(),
+            'checks' => $checkResults->values()->toArray(),
         ];
     }
 }
