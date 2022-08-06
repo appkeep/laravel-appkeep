@@ -41,6 +41,9 @@ return [
         /**
          * The disk names on which the backups will be stored.
          * You can store your backups both on-site and off-site.
+         *
+         * To view and configure your disks, see:
+         * config/filesystems.php
          */
         'destination' => [
             'local',
