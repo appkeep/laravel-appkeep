@@ -15,7 +15,7 @@ class SendHeartbeat
     {
         Http::withHeaders($this->requestHeaders())
             ->post(
-                config('appkeep.endpoint'),
+                config('appkeep.url') . '/health',
                 $this->requestBody($checkResults)
             )
             ->throw();

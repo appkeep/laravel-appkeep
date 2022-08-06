@@ -6,7 +6,7 @@ return [
     /**
      * Don't change this URL, unless you have a good reason.
      */
-    'endpoint' => 'https://appkeep.co/api/v1/health',
+    'url' => 'https://appkeep.co/api/v1',
 
     /**
      * Make sure to set this in your .env file.
