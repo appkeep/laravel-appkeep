@@ -20,17 +20,18 @@ class UbuntuSecurityUpdatesCheck extends Check
             throw new Exception('This check can only be run on Ubuntu servers.');
         }
 
-        $output = shell_exec('/usr/lib/update-notifier/apt-check');
-        $lines = explode("\n", $output);
+        // apt-check writes to stderr, so capture it with 2>&1
+        $output = shell_exec('/usr/lib/update-notifier/apt-check 2>&1');
 
-        foreach ($lines as $line) {
-            if (strpos($line, 'security') !== false) {
-                // extract number from text
-                $number = preg_replace('/[^0-9]/', '', $line);
+        list($updates, $securityUpdates) = array_map(
+            'intval',
+            explode(";", $output)
+        );
 
-                return Result::warn('You have ' . $number . ' pending security updates for Ubuntu')
-                    ->summary($number);
-            }
+        if ($securityUpdates > 0) {
+            $message = sprintf('You have %d pending security updates for Ubuntu', $securityUpdates);
+
+            return Result::warn($message)->summary($securityUpdates);
         }
 
         return Result::ok();
