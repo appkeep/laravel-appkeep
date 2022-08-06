@@ -3,8 +3,8 @@
 namespace Appkeep\Laravel\Commands;
 
 use Illuminate\Console\Command;
-use Appkeep\Laravel\Diagnostics\Server;
 use Illuminate\Support\Facades\Artisan;
+use Appkeep\Laravel\Health\Diagnostics\Server;
 
 class InitCommand extends Command
 {

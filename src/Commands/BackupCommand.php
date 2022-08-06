@@ -4,7 +4,7 @@ namespace Appkeep\Laravel\Commands;
 
 use RuntimeException;
 use Illuminate\Console\Command;
-use Appkeep\Laravel\Diagnostics\Laravel;
+use Appkeep\Laravel\Health\Diagnostics\Laravel;
 use Appkeep\Laravel\Commands\Concerns\InteractsWithComposer;
 
 class BackupCommand extends Command

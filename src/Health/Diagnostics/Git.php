@@ -1,6 +1,6 @@
 <?php
 
-namespace Appkeep\Laravel\Diagnostics;
+namespace Appkeep\Laravel\Health\Diagnostics;
 
 class Git
 {
