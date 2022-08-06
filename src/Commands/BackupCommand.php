@@ -3,12 +3,14 @@
 namespace Appkeep\Laravel\Commands;
 
 use RuntimeException;
-use Appkeep\Laravel\Composer;
 use Illuminate\Console\Command;
 use Appkeep\Laravel\Diagnostics\Laravel;
+use Appkeep\Laravel\Commands\Concerns\InteractsWithComposer;
 
 class BackupCommand extends Command
 {
+    use InteractsWithComposer;
+
     protected $signature = 'appkeep:backups';
     protected $description = 'Configure backups for your project.';
 
@@ -91,8 +93,7 @@ class BackupCommand extends Command
             exit;
         }
 
-        $composer = new Composer(app()['files'], base_path());
-        $composer->require(['require', $package], fn ($type, $buffer) => $this->line($buffer));
+        $this->requireComposerPackage($package);
 
         $this->line('');
         $this->line('');
