@@ -3,11 +3,11 @@
 namespace Appkeep\Laravel\Concerns;
 
 use Appkeep\Laravel\Facades\Appkeep;
-use Appkeep\Laravel\Checks\CacheCheck;
-use Appkeep\Laravel\Checks\StorageCheck;
-use Appkeep\Laravel\Checks\DatabaseCheck;
-use Appkeep\Laravel\Checks\DiskUsageCheck;
-use Appkeep\Laravel\Checks\EnvironmentCheck;
+use Appkeep\Laravel\Health\Checks\CacheCheck;
+use Appkeep\Laravel\Health\Checks\StorageCheck;
+use Appkeep\Laravel\Health\Checks\DatabaseCheck;
+use Appkeep\Laravel\Health\Checks\DiskUsageCheck;
+use Appkeep\Laravel\Health\Checks\EnvironmentCheck;
 
 trait RegistersDefaultChecks
 {

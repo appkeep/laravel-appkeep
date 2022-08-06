@@ -1,11 +1,11 @@
 <?php
 
-namespace Appkeep\Laravel\Checks;
+namespace Appkeep\Laravel\Health\Checks;
 
 use Exception;
-use Appkeep\Laravel\Check;
-use Appkeep\Laravel\Result;
 use Appkeep\Laravel\Enums\Status;
+use Appkeep\Laravel\Health\Check;
+use Appkeep\Laravel\Health\Result;
 use Illuminate\Support\Facades\Cache;
 
 class CacheCheck extends Check
@@ -20,7 +20,7 @@ class CacheCheck extends Check
     }
 
     /**
-     * @var Result
+     * @var \Appkeep\Laravel\Health\Result
      */
     public function run()
     {

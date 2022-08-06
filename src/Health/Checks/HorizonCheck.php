@@ -1,19 +1,17 @@
 <?php
 
-namespace Appkeep\Laravel\Checks;
+namespace Appkeep\Laravel\Health\Checks;
 
-use Exception;
-use Appkeep\Laravel\Check;
-use Appkeep\Laravel\Result;
-use Laravel\Horizon\Contracts\MasterSupervisorRepository;
+use Appkeep\Laravel\Health\Check;
+use Appkeep\Laravel\Health\Result;
 
 class HorizonCheck extends Check
 {
     public function run()
     {
         try {
-            $horizon = app(MasterSupervisorRepository::class);
-        } catch (Exception) {
+            $horizon = app('Laravel\Horizon\Contracts\MasterSupervisorRepository');
+        } catch (\Exception $e) {
             return Result::fail('Horizon not detected.');
         }
 

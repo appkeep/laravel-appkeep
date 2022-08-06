@@ -1,6 +1,6 @@
 <?php
 
-namespace Appkeep\Laravel;
+namespace Appkeep\Laravel\Health;
 
 use Cron\CronExpression;
 use Illuminate\Support\Facades\Date;

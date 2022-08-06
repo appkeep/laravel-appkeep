@@ -1,10 +1,10 @@
 <?php
 
-namespace Appkeep\Laravel\Checks;
+namespace Appkeep\Laravel\Health\Checks;
 
 use Exception;
-use Appkeep\Laravel\Check;
-use Appkeep\Laravel\Result;
+use Appkeep\Laravel\Health\Check;
+use Appkeep\Laravel\Health\Result;
 use Appkeep\Laravel\Diagnostics\Server;
 
 class UbuntuSecurityUpdatesCheck extends Check

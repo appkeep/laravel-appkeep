@@ -76,7 +76,7 @@ By default, Appkeep will register some default checks for you with some sensible
 
 namespace App\Providers;
 
-use Appkeep\Laravel\Checks\DiskUsageCheck;
+use Appkeep\Laravel\Health\Checks\Checks\Checks\DiskUsageCheck;
 use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\ServiceProvider;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Appkeep\Laravel\Checks;
+namespace Appkeep\Laravel\Health\Checks;
 
-use Appkeep\Laravel\Check;
-use Appkeep\Laravel\Result;
+use Appkeep\Laravel\Health\Check;
+use Appkeep\Laravel\Health\Result;
 
 class DiskUsageCheck extends Check
 {

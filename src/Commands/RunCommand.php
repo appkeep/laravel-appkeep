@@ -2,9 +2,9 @@
 
 namespace Appkeep\Laravel\Commands;
 
-use Appkeep\Laravel\Result;
 use Illuminate\Console\Command;
 use Appkeep\Laravel\Enums\Status;
+use Appkeep\Laravel\Health\Result;
 use Appkeep\Laravel\Diagnostics\Git;
 use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\Facades\Http;
