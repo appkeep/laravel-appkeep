@@ -4,12 +4,9 @@ namespace Appkeep\Laravel\Commands;
 
 use Illuminate\Console\Command;
 use Appkeep\Laravel\Enums\Status;
-use Appkeep\Laravel\Health\Result;
 use Appkeep\Laravel\Facades\Appkeep;
-use Illuminate\Support\Facades\Http;
-use Appkeep\Laravel\Health\Diagnostics\Git;
-use Appkeep\Laravel\Health\Diagnostics\Server;
-use Appkeep\Laravel\Health\Diagnostics\Laravel;
+use Appkeep\Laravel\Health\Actions\RunChecks;
+use Appkeep\Laravel\Health\Actions\SendHeartbeat;
 
 class RunCommand extends Command
 {
@@ -31,77 +28,38 @@ class RunCommand extends Command
             return;
         }
 
-        $results = [];
-        $consoleOutput = [];
+        $results = (new RunChecks)($checks);
 
-        foreach ($checks as $check) {
-            try {
-                $result = $check->run();
-            } catch (\Exception $e) {
-                $result = Result::crash($e->getMessage());
-            } finally {
-                $results[] = [
-                    'check' => $check->name,
-                    'result' => [
-                        'status' => $result->status,
-                        'message' => $result->message,
-                        'summary' => $result->summary,
-                        'meta' => $result->meta,
-                    ],
-                ];
+        $this->table(
+            ['Check', 'Outcome', 'Message'],
+            $results->map(fn ($result) => $this->toConsoleTableRow($result))
+        );
 
-                $consoleOutput[] = $this->toConsoleTableRow($check->name, $result);
+        rescue(
+            fn () => (new SendHeartbeat)($results),
+            function (\Exception $e) {
+                $this->warn('Failed to post results to Appkeep.');
+                $this->line($e->getMessage());
             }
-        }
-
-        try {
-            $this->postResultsToAppkeep($results);
-        } catch (\Exception $e) {
-            $this->warn('Failed to post results to Appkeep.');
-            $this->line($e->getMessage());
-        }
-
-        $this->table(['Check', 'Outcome', 'Message'], $consoleOutput);
+        );
     }
 
-    private function postResultsToAppkeep($results)
-    {
-        Http::withHeaders([
-            'Authorization' => sprintf('Bearer %s', config('appkeep.key')),
-            'Accept' => 'application/json',
-        ])
-            ->post(config('appkeep.endpoint'), [
-                'server' => [
-                    'uid' => Server::uniqueIdentifier(),
-                    'name' => Server::name(),
-                    'os' => Server::os(),
-                ],
-                'packages' => [
-                    'laravel/framework' => Laravel::version(),
-                    'appkeep/laravel-appkeep' => Appkeep::version(),
-                ],
-                'git' => ($hash = Git::shortCommitHash()) ? [
-                    'commit' => $hash,
-                    'url' => Git::repositoryUrl(),
-                ] : null,
-                'checks' => $results,
-            ])
-            ->throw();
-    }
-
-    private function toConsoleTableRow($name, Result $result)
+    private function toConsoleTableRow(array $result)
     {
         $status = [
             Status::CRASH => '❌',
-            Status::OK => sprintf('✅ %s', $result->summary ?? 'OK'),
+            Status::OK => sprintf(
+                '✅ %s',
+                $result['result']['summary'] ?? 'OK'
+            ),
             Status::WARN => '⚠️',
             Status::FAIL => '🚨',
         ];
 
         return [
-            $name,
-            $status[$result->status],
-            $result->message ?? '',
+            $result['check'],
+            $status[$result['result']['status']],
+            $result['result']['message'] ?? '',
         ];
     }
 }
