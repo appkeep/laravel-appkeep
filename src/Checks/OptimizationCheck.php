@@ -47,8 +47,8 @@ class OptimizationCheck extends Check
                     ->map(
                         fn ($check) => Str::of($check)
                             ->headline()
-                            ->lower()
                             ->ucfirst()
+                            ->words(1, '')
                     )
                     ->join(', ')
             );

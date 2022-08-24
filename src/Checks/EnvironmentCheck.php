@@ -7,11 +7,14 @@ use Appkeep\Laravel\Result;
 
 class EnvironmentCheck extends Check
 {
-    protected string $expectedEnvironment = 'production';
+    protected $environment = 'production';
 
-    public function expectEnvironment($expectedEnvironment)
+    /**
+     * Ensure environment value is set to...
+     */
+    public function environment($environment)
     {
-        $this->expectedEnvironment = $expectedEnvironment;
+        $this->environment = $environment;
 
         return $this;
     }
@@ -27,8 +30,8 @@ class EnvironmentCheck extends Check
 
         $env = app()->environment();
 
-        if ($env != $this->expectedEnvironment) {
-            Result::fail("Environment is not set to `{$this->expectedEnvironment}`");
+        if ($env !== $this->environment) {
+            Result::fail("Environment is not set to `{$this->environment}`");
         }
 
         return Result::ok();
