@@ -7,9 +7,9 @@ _Run Laravel in production with confidence. [Join the private beta.](https://app
 ![GitHub Actions](https://github.com/appkeep/laravel-appkeep/actions/workflows/main.yml/badge.svg)
 [![StandWithUkraine](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/badges/StandWithUkraine.svg)](https://supportukrainenow.org/)
 
-[App:keep](https://appkeep.co) is a monitoring solution. It's very easy to install and has a small footprint. The monitors run in a scheduled artisan command and sends the results to App:keep servers over a secure connection.
+[App:keep](https://appkeep.co) is a monitoring solution. It's very easy to install and has a small footprint. The monitors run in a scheduled artisan command and submit the results to App:keep servers over a secure connection.
 
-App:keep has a UI that lets you monitor many Laravel applications from a single interface, receive Slack or email alerts, and more. In addition to the health checks, you can set up uptime, certificate and performance monitoring. It's still being actively developed. [Join our private beta.](https://appkeep.co)
+Using App:keep's UI, you can monitor many Laravel applications from a single interface, receive Slack or email alerts, and more. It's still being actively developed. [Join our private beta.](https://appkeep.co)
 
 ## Documentation
 
