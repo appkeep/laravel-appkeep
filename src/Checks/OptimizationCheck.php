@@ -46,7 +46,8 @@ class OptimizationCheck extends Check
                     $failing->keys()
                     ->map(
                         fn ($check) => Str::of($check)
-                            ->headline()
+                            ->snake()
+                            ->replace('_', ' ')
                             ->ucfirst()
                             ->words(1, '')
                     )
