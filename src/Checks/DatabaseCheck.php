@@ -32,7 +32,7 @@ class DatabaseCheck extends Check
         try {
             DB::connection($connection)->getPdo();
         } catch (Exception $exception) {
-            return Result::fail('Database connection failed: ' . $exception->getMessage())
+            return Result::fail('Could not connect to DB: ' . $exception->getMessage())
                 ->meta($meta);
         }
 

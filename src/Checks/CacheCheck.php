@@ -32,7 +32,7 @@ class CacheCheck extends Check
         try {
             $this->testCache($driver);
         } catch (Exception $e) {
-            Result::fail($e->getMessage())->meta($meta);
+            return Result::fail($e->getMessage())->meta($meta);
         }
 
         return Result::ok()->meta($meta);
