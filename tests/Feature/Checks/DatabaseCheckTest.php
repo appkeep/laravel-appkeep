@@ -15,13 +15,13 @@ class DatabaseCheckTest extends TestCase
     {
         $this->app['config']->set(
             'database.default',
-            'mysql'
+            'sqlsrv'
         );
 
         $result = DatabaseCheck::make()->run();
         $this->assertEquals(Status::FAIL, $result->status);
         $this->assertStringStartsWith('Could not connect to DB:', $result->message);
-        $this->assertStringContainsString('Access denied for user', $result->message);
+        $this->assertStringContainsString('Unable to connect', $result->message);
     }
 
     /**
