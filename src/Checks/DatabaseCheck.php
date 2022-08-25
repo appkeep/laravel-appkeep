@@ -5,16 +5,18 @@ namespace Appkeep\Laravel\Checks;
 use Exception;
 use Appkeep\Laravel\Check;
 use Appkeep\Laravel\Result;
-use Appkeep\Laravel\Enums\Status;
 use Illuminate\Support\Facades\DB;
 
 class DatabaseCheck extends Check
 {
-    private $connectionName;
+    private $connection;
 
-    public function connectionName($connectionName)
+    /**
+     * Check a different connection
+     */
+    public function connection($connection)
     {
-        $this->connectionName = $connectionName;
+        $this->connection = $connection;
 
         return $this;
     }
@@ -24,20 +26,16 @@ class DatabaseCheck extends Check
      */
     public function run()
     {
-        $connectionName = $this->connectionName ?? config('database.default');
-
-        $result = (new Result(Status::OK))->meta([
-            'connection_name' => $connectionName,
-        ]);
+        $connection = $this->connection ?? config('database.default');
+        $meta = ['connection' => $connection];
 
         try {
-            DB::connection($connectionName)->getPdo();
-
-            return $result;
+            DB::connection($connection)->getPdo();
         } catch (Exception $exception) {
-            return $result->failWith(
-                "Could not connect to the database: `{$exception->getMessage()}`"
-            );
+            return Result::fail('Could not connect to DB: ' . $exception->getMessage())
+                ->meta($meta);
         }
+
+        return Result::ok()->meta($meta);
     }
 }

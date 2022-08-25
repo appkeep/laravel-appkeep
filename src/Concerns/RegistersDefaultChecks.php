@@ -7,8 +7,8 @@ use Appkeep\Laravel\Checks\CacheCheck;
 use Appkeep\Laravel\Checks\StorageCheck;
 use Appkeep\Laravel\Checks\DatabaseCheck;
 use Appkeep\Laravel\Checks\DiskUsageCheck;
-use Appkeep\Laravel\Checks\EnvironmentCheck;
 use Appkeep\Laravel\Checks\OptimizationCheck;
+use Appkeep\Laravel\Checks\ProductionModeCheck;
 
 trait RegistersDefaultChecks
 {
@@ -16,7 +16,7 @@ trait RegistersDefaultChecks
     {
         Appkeep::checks([
 
-            EnvironmentCheck::make(),
+            ProductionModeCheck::make(),
 
             StorageCheck::make(),
 

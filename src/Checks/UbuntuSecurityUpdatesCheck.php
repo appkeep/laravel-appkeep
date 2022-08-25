@@ -31,7 +31,7 @@ class UbuntuSecurityUpdatesCheck extends Check
         if ($securityUpdates > 0) {
             $message = sprintf('You have %d pending security updates for Ubuntu', $securityUpdates);
 
-            return Result::warn($message)->summary($securityUpdates);
+            return Result::warn($message);
         }
 
         return Result::ok();

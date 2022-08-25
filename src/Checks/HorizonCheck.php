@@ -2,7 +2,6 @@
 
 namespace Appkeep\Laravel\Checks;
 
-use Exception;
 use Appkeep\Laravel\Check;
 use Appkeep\Laravel\Result;
 use Laravel\Horizon\Contracts\MasterSupervisorRepository;
@@ -11,24 +10,19 @@ class HorizonCheck extends Check
 {
     public function run()
     {
-        try {
-            $horizon = app(MasterSupervisorRepository::class);
-        } catch (Exception) {
-            return Result::fail('Horizon not detected.');
+        $supervisors = app(MasterSupervisorRepository::class)->all();
+
+        if (empty($supervisors)) {
+            return Result::fail('Horizon not detected.')->summary('Not running');
         }
 
-        $masterSupervisors = $horizon->all();
+        $paused = array_filter(
+            $supervisors,
+            fn ($master) => $master->status === 'paused'
+        );
 
-        if (count($masterSupervisors) === 0) {
-            return Result::fail('Horizon is not running.')
-                ->summary('Not running');
-        }
-
-        $masterSupervisor = $masterSupervisors[0];
-
-        if ($masterSupervisor->status === 'paused') {
-            return Result::warn('Horizon is paused.')
-                ->summary('Paused');
+        if (! empty($paused)) {
+            return Result::warn('Horizon is paused.')->summary('Paused');
         }
 
         return Result::ok()->summary('Running');

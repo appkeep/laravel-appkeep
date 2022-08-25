@@ -1,8 +1,6 @@
 <?php
 
-
 return [
-
     /**
      * Don't change this URL, unless you have a good reason.
      */

@@ -45,10 +45,11 @@ class OptimizationCheck extends Check
                 'Missing optimizations: ' .
                     $failing->keys()
                     ->map(
-                        fn ($check) => Str::of($check)
-                            ->headline()
-                            ->lower()
+                        fn ($check) => (string) Str::of($check)
+                            ->snake()
+                            ->replace('_', ' ')
                             ->ucfirst()
+                            ->words(1, '')
                     )
                     ->join(', ')
             );
