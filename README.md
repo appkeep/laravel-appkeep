@@ -32,7 +32,7 @@ If you discover any security related issues, please email hello@swiftmade.co ins
 
 The BSD-3-Clause License (BSD-3). Please see [License File](LICENSE.md) for more information.
 
-### Alternatives
+### Alternatives
 
 If you're looking to monitor only one application, you can also check out these alternatives:
 
