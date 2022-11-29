@@ -35,10 +35,15 @@ class AppkeepProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (! $this->app->runningInConsole()) {
-            return;
-        }
+        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
 
+        if ($this->app->runningInConsole()) {
+            $this->bootForConsole();
+        }
+    }
+
+    public function bootForConsole()
+    {
         $this->publishes([
             __DIR__ . '/../config/appkeep.php' => config_path('appkeep.php'),
         ], 'config');

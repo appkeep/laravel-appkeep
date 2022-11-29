@@ -5,11 +5,9 @@ namespace Appkeep\Laravel\Commands;
 use Appkeep\Laravel\Result;
 use Illuminate\Console\Command;
 use Appkeep\Laravel\Enums\Status;
-use Appkeep\Laravel\Diagnostics\Git;
 use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\Facades\Http;
 use Appkeep\Laravel\Diagnostics\Server;
-use Appkeep\Laravel\Diagnostics\Laravel;
 
 class RunCommand extends Command
 {
@@ -76,14 +74,6 @@ class RunCommand extends Command
                     'name' => Server::name(),
                     'os' => Server::os(),
                 ],
-                'packages' => [
-                    'laravel/framework' => Laravel::version(),
-                    'appkeep/laravel-appkeep' => Appkeep::version(),
-                ],
-                'git' => ($hash = Git::shortCommitHash()) ? [
-                    'commit' => $hash,
-                    'url' => Git::repositoryUrl(),
-                ] : null,
                 'checks' => $results,
             ])
             ->throw();
