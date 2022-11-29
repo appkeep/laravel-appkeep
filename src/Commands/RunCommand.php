@@ -69,6 +69,7 @@ class RunCommand extends Command
             'Accept' => 'application/json',
         ])
             ->post(config('appkeep.endpoint'), [
+                'insights' => route('appkeep.insights'),
                 'server' => [
                     'uid' => Server::uniqueIdentifier(),
                     'name' => Server::name(),

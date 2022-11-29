@@ -64,7 +64,9 @@ class LoginCommand extends Command
         $this->line('');
 
         $status = Http::withHeaders(['Authorization' => 'Bearer ' . $key])
-            ->post(config('appkeep.endpoint'), [])
+            ->post(config('appkeep.endpoint'), [
+                'insights' => route('appkeep.insights'),
+            ])
             ->status();
 
         if (403 === $status) {
