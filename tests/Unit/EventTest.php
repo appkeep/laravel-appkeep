@@ -23,5 +23,6 @@ class EventTest extends TestCase
         $this->assertArrayHasKey('os', $data['context']);
         $this->assertArrayHasKey('server', $data['context']);
         $this->assertArrayHasKey('runtime', $data['context']);
+        $this->assertArrayHasKey('appkeep', $data['context']);
     }
 }
