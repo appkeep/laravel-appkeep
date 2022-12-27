@@ -2,8 +2,8 @@
 
 namespace Appkeep\Laravel\Commands;
 
+use Appkeep\Laravel\HttpClient;
 use Illuminate\Console\Command;
-use Appkeep\Laravel\Facades\Appkeep;
 use Appkeep\Laravel\Events\LoginEvent;
 use Illuminate\Support\Facades\Artisan;
 
@@ -62,9 +62,9 @@ class LoginCommand extends Command
         } while (! $key);
 
         $this->comment('Verifying your key...');
-        $this->line('');
 
-        $status = Appkeep::client()->sendEvent(new LoginEvent())->status();
+        $client = new HttpClient($key);
+        $status = $client->sendEvent(new LoginEvent())->status();
 
         if (403 === $status) {
             $this->error('Invalid project key.');
@@ -73,7 +73,7 @@ class LoginCommand extends Command
         }
 
         if (200 !== $status) {
-            $this->error('Unknown error.');
+            $this->error("Unknown error (received {$status}).");
             $this->line('');
             $this->line('Make sure your project key is valid.');
             $this->line('Reach us at hello@appkeep.co for support.');
@@ -81,7 +81,16 @@ class LoginCommand extends Command
             return;
         }
 
-        $this->info('Project key is valid, writing it to your .env file...');
+        sleep(1);
+
+        $this->info('Key is verified.');
+        $this->line('Writing APPKEEP_KEY to your .env file...');
+        $this->info('Awesome. You are all set ✅');
+        $this->line('');
+        $this->line('');
+        $this->line('Pro tip:');
+        $this->line('Make sure you have a cronjob that runs "php artisan schedule:run" every minute.');
+        $this->line('Learn how to set this up here: https://laravel.com/docs/9.x/scheduling#running-the-scheduler');
 
         $handler = fopen(base_path('.env'), 'a');
         fputs($handler, "\n\nAPPKEEP_KEY={$key}\n");
