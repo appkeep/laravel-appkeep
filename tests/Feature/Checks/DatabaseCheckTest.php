@@ -21,7 +21,6 @@ class DatabaseCheckTest extends TestCase
         $result = DatabaseCheck::make()->run();
         $this->assertEquals(Status::FAIL, $result->status);
         $this->assertStringStartsWith('Could not connect to DB:', $result->message);
-        $this->assertStringContainsString('Unable to connect', $result->message);
     }
 
     /**
