@@ -5,10 +5,13 @@ namespace Appkeep\Laravel\Checks;
 use Exception;
 use Appkeep\Laravel\Check;
 use Appkeep\Laravel\Result;
-use Appkeep\Laravel\Diagnostics\Server;
+use Appkeep\Laravel\Enums\Scope;
+use Appkeep\Laravel\Contexts\ServerContext;
 
 class UbuntuSecurityUpdatesCheck extends Check
 {
+    public $scope = Scope::SERVER;
+
     public static function make($name = null)
     {
         return (new UbuntuSecurityUpdatesCheck($name))->daily();
@@ -16,7 +19,7 @@ class UbuntuSecurityUpdatesCheck extends Check
 
     public function run()
     {
-        if (! Server::isUbuntu()) {
+        if (! ServerContext::isUbuntu()) {
             throw new Exception('This check can only be run on Ubuntu servers.');
         }
 
