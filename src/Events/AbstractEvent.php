@@ -30,12 +30,12 @@ abstract class AbstractEvent
     public function setContext($name, $data)
     {
         if (isset($this->contexts[$name])) {
-            throw new RuntimeException("Context '${name}' is already set. You cannot override this context.");
+            throw new RuntimeException("Context '{$name}' is already set. You cannot override this context.");
         }
 
         if (! is_string($data) && ! is_array($data) && ! ($data instanceof Arrayable)) {
             throw new RuntimeException(
-                "Data passed for ${name} context must be either a string,"
+                "Data passed for {$name} context must be either a string,"
                     + " an array or an Arrayable class instance."
             );
         }
