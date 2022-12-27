@@ -77,6 +77,8 @@ class LoginCommand extends Command
             $this->line('');
             $this->line('Make sure your project key is valid.');
             $this->line('Reach us at hello@appkeep.co for support.');
+
+            return;
         }
 
         $this->info('Project key is valid, writing it to your .env file...');
