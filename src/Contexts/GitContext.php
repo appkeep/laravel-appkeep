@@ -1,10 +1,20 @@
 <?php
 
-namespace Appkeep\Laravel\Diagnostics;
+namespace Appkeep\Laravel\Contexts;
 
-class Git
+use Illuminate\Contracts\Support\Arrayable;
+
+class GitContext implements Arrayable
 {
-    public static function commitHash()
+    public function toArray()
+    {
+        return [
+            'head' => $this->shortCommitHash(),
+            'origin' => $this->repositoryUrl(),
+        ];
+    }
+
+    private function commitHash()
     {
         $output = shell_exec('cd ' . base_path() . ' && git rev-parse HEAD 2> /dev/null');
 
@@ -15,14 +25,14 @@ class Git
         return $output;
     }
 
-    public static function shortCommitHash()
+    private function shortCommitHash()
     {
-        if ($commitHash = self::commitHash()) {
+        if ($commitHash = $this->commitHash()) {
             return substr($commitHash, 0, 7);
         }
     }
 
-    public static function repositoryUrl()
+    private function repositoryUrl()
     {
         $gitUrl = shell_exec('cd ' . base_path() . ' && git config --get remote.origin.url 2> /dev/null');
 

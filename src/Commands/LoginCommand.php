@@ -3,7 +3,8 @@
 namespace Appkeep\Laravel\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
+use Appkeep\Laravel\Facades\Appkeep;
+use Appkeep\Laravel\Events\LoginEvent;
 use Illuminate\Support\Facades\Artisan;
 
 class LoginCommand extends Command
@@ -27,7 +28,7 @@ class LoginCommand extends Command
         $choice = $this->choice('How should we begin?', [
             'Sign up and create a new project.',
             'I\'ve got an existing project. I want to enter my key.',
-        ], 0);
+        ], 1);
 
         $choice == 'Sign up and create a new project.'
             ? $this->signUpAndCreateProject()
@@ -63,11 +64,7 @@ class LoginCommand extends Command
         $this->comment('Verifying your key...');
         $this->line('');
 
-        $status = Http::withHeaders(['Authorization' => 'Bearer ' . $key])
-            ->post(config('appkeep.endpoint'), [
-                'insights' => route('appkeep.insights'),
-            ])
-            ->status();
+        $status = Appkeep::client()->sendEvent(new LoginEvent())->status();
 
         if (403 === $status) {
             $this->error('Invalid project key.');

@@ -6,8 +6,7 @@ use Appkeep\Laravel\Result;
 use Illuminate\Console\Command;
 use Appkeep\Laravel\Enums\Status;
 use Appkeep\Laravel\Facades\Appkeep;
-use Illuminate\Support\Facades\Http;
-use Appkeep\Laravel\Diagnostics\Server;
+use Appkeep\Laravel\Events\ChecksEvent;
 
 class RunCommand extends Command
 {
@@ -29,7 +28,8 @@ class RunCommand extends Command
             return;
         }
 
-        $results = [];
+        $event = new ChecksEvent();
+
         $consoleOutput = [];
 
         foreach ($checks as $check) {
@@ -38,22 +38,13 @@ class RunCommand extends Command
             } catch (\Exception $e) {
                 $result = Result::crash($e->getMessage());
             } finally {
-                $results[] = [
-                    'check' => $check->name,
-                    'result' => [
-                        'status' => $result->status,
-                        'message' => $result->message,
-                        'summary' => $result->summary,
-                        'meta' => $result->meta,
-                    ],
-                ];
-
+                $event->addResult($check, $result);
                 $consoleOutput[] = $this->toConsoleTableRow($check->name, $result);
             }
         }
 
         try {
-            $this->postResultsToAppkeep($results);
+            $this->postResultsToAppkeep($event);
         } catch (\Exception $e) {
             $this->warn('Failed to post results to Appkeep.');
             $this->line($e->getMessage());
@@ -62,22 +53,9 @@ class RunCommand extends Command
         $this->table(['Check', 'Outcome', 'Message'], $consoleOutput);
     }
 
-    private function postResultsToAppkeep($results)
+    private function postResultsToAppkeep(ChecksEvent $event)
     {
-        Http::withHeaders([
-            'Authorization' => sprintf('Bearer %s', config('appkeep.key')),
-            'Accept' => 'application/json',
-        ])
-            ->post(config('appkeep.endpoint'), [
-                'insights' => route('appkeep.insights'),
-                'server' => [
-                    'uid' => Server::uniqueIdentifier(),
-                    'name' => Server::name(),
-                    'os' => Server::os(),
-                ],
-                'checks' => $results,
-            ])
-            ->throw();
+        Appkeep::client()->sendEvent($event)->throw();
     }
 
     private function toConsoleTableRow($name, Result $result)

@@ -26,6 +26,8 @@ class ProductionModeCheckTest extends TestCase
      */
     public function it_fails_if_environment_is_not_production()
     {
+        $this->app['config']->set('app.debug', false);
+
         $result = ProductionModeCheck::make()->run();
         $this->assertEquals(Status::FAIL, $result->status);
     }
@@ -35,6 +37,8 @@ class ProductionModeCheckTest extends TestCase
      */
     public function it_allows_checking_a_different_environment()
     {
+        $this->app['config']->set('app.debug', false);
+
         $result = ProductionModeCheck::make()
             ->environment('testing')
             ->run();

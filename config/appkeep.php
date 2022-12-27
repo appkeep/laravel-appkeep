@@ -4,7 +4,7 @@ return [
     /**
      * Don't change this URL, unless you have a good reason.
      */
-    'endpoint' => 'https://appkeep.co/api/v1/health',
+    'endpoint' => 'https://appkeep.co/api/v1/events',
 
     /**
      * Make sure to set this in your .env file.
@@ -21,7 +21,7 @@ return [
     'server' => env('APPKEEP_SERVER_UID'),
 
     /**
-     * Used to verify requests coming to insights endpoint are actually coming from Appkeep.
+     * Used to verify requests coming to explore endpoint are actually coming from Appkeep.
      * Please DO NOT MODIFY this array unless you know what you're doing.
      */
     'our_servers' => [

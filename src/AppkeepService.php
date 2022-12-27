@@ -10,7 +10,12 @@ class AppkeepService
 
     public function version()
     {
-        return '0.3.0';
+        return '0.4.0';
+    }
+
+    public function client()
+    {
+        return new HttpClient(config('appkeep.key'));
     }
 
     public function forgetDefaultChecks()
