@@ -51,9 +51,6 @@ abstract class AbstractEvent
     {
         $this->setContext('os', new OsContext)
             ->setContext('runtime', new RuntimeContext)
-            ->setContext('server', new ServerContext)
-            ->setContext('appkeep', [
-                'url' => route('appkeep.explore'),
-            ]);
+            ->setContext('server', new ServerContext);
     }
 }

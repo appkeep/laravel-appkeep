@@ -4,6 +4,7 @@ namespace Appkeep\Laravel\Events;
 
 use Appkeep\Laravel\Check;
 use Appkeep\Laravel\Result;
+use Appkeep\Laravel\Facades\Appkeep;
 
 class ChecksEvent extends AbstractEvent
 {
@@ -39,6 +40,7 @@ class ChecksEvent extends AbstractEvent
             parent::toArray(),
             [
                 'checks' => $this->serializeResults(),
+                'all_checks' => Appkeep::registeredChecks(),
             ]
         );
     }

@@ -13,11 +13,14 @@ class ExploreEvent extends AbstractEvent
 
     public function __construct()
     {
-        parent::__construct('explore');
+        $this->addPhpContext();
+    }
 
+    protected function addPhpContext()
+    {
         $opcache = (bool) opcache_get_status();
 
-        $this->setContext('php', [
+        return $this->setContext('php', [
             'opcache_enabled' => $opcache,
             'xdebug' => extension_loaded('xdebug'),
             'memory_limit' => ini_get('memory_limit'),

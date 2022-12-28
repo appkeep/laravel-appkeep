@@ -44,6 +44,11 @@ class AppkeepService
         return collect($this->checks);
     }
 
+    public function registeredChecks()
+    {
+        return $this->checks()->keys();
+    }
+
     public function replaceChecks(array $checks = [])
     {
         return $this->checks($checks, true);

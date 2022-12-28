@@ -20,6 +20,14 @@ class LoginCommand extends Command
             return;
         }
 
+        if (app()->environment('local')) {
+            $this->line('');
+            $this->warn('!!!!!! Local environment detected. !!!!!!');
+            $this->line('The login command is meant for production.');
+            $this->line('');
+            $this->line('');
+        }
+
         $this->logo();
 
         $this->line('Welcome to App:keep 🎉');
@@ -84,13 +92,23 @@ class LoginCommand extends Command
         sleep(1);
 
         $this->info('Key is verified.');
-        $this->line('Writing APPKEEP_KEY to your .env file...');
+        $this->line('- Writing APPKEEP_KEY to your .env file...');
+        $this->writeKeyToEnv($key);
+
+        $this->line('- Sending post-deploy event...');
+        $this->sendPostDeployEvent();
+
         $this->info('Awesome. You are all set ✅');
         $this->line('');
         $this->line('');
         $this->line('Pro tip:');
         $this->line('Make sure you have a cronjob that runs "php artisan schedule:run" every minute.');
         $this->line('Learn how to set this up here: https://laravel.com/docs/9.x/scheduling#running-the-scheduler');
+    }
+
+    private function writeKeyToEnv($key)
+    {
+        app('config')->set('appkeep.key', $key);
 
         $handler = fopen(base_path('.env'), 'a');
         fputs($handler, "\n\nAPPKEEP_KEY={$key}\n");
@@ -98,8 +116,13 @@ class LoginCommand extends Command
 
         if (file_exists(base_path('bootstrap/cache/config.php'))) {
             Artisan::call('config:cache');
-            $this->info('Configuration cache cleared!');
-            $this->info('Configuration cached successfully!');
+            $this->line('- Configuration cache cleared!');
+            $this->line('- Configuration cached successfully!');
         }
+    }
+
+    private function sendPostDeployEvent()
+    {
+        Artisan::call('appkeep:post-deploy');
     }
 }

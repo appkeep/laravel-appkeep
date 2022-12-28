@@ -23,7 +23,7 @@ class HttpClient
      */
     public function sendEvent(AbstractEvent $event)
     {
-        return Http::withHeaders($this->defaultHeaders())->post(
+        return Http::withoutVerifying()->withHeaders($this->defaultHeaders())->post(
             config('appkeep.endpoint'),
             $event->toArray()
         );
