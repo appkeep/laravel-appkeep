@@ -9,7 +9,6 @@ class ExploreController
 {
     public function __invoke()
     {
-        /*
         $ourServers = config('appkeep.our_servers');
 
         $hashedIp = hash('sha256', request()->ip());
@@ -27,10 +26,8 @@ class ExploreController
 
         if ($hashedKey !== request()->header('x-appkeep-key')) {
             abort(401, "Something's not right...");
-        }*/
+        }
 
-        return (new ExploreEvent)->toArray();
-
-        // Appkeep::client()->sendEvent(new ExploreEvent);
+        Appkeep::client()->sendEvent(new ExploreEvent);
     }
 }

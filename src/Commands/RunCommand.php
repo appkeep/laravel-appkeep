@@ -63,8 +63,8 @@ class RunCommand extends Command
         $status = [
             Status::CRASH => '❌',
             Status::OK => sprintf('✅ %s', $result->summary ?? 'OK'),
-            Status::WARN => '⚠️',
-            Status::FAIL => '🚨',
+            Status::WARN => sprintf('⚠️  %s', $result->summary ?? ''),
+            Status::FAIL => sprintf('🚨  %s', $result->summary ?? ''),
         ];
 
         return [

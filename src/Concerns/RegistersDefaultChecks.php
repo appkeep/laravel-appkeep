@@ -7,6 +7,7 @@ use Appkeep\Laravel\Checks\CacheCheck;
 use Appkeep\Laravel\Checks\StorageCheck;
 use Appkeep\Laravel\Checks\DatabaseCheck;
 use Appkeep\Laravel\Checks\DiskUsageCheck;
+use Appkeep\Laravel\Checks\SystemLoadCheck;
 use Appkeep\Laravel\Checks\OptimizationCheck;
 use Appkeep\Laravel\Checks\ProductionModeCheck;
 
@@ -27,6 +28,8 @@ trait RegistersDefaultChecks
             DiskUsageCheck::make(),
 
             OptimizationCheck::make(),
+
+            SystemLoadCheck::make()->everyFiveMinutes(),
         ]);
     }
 }
