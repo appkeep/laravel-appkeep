@@ -24,6 +24,7 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.1",
+        "johnkary/phpunit-speedtrap": "^4.0",
         "orchestra/testbench": "5.*|6.*|7.*",
         "phpunit/phpunit": "^8.4|^9.0"
     },

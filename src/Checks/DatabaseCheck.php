@@ -2,6 +2,7 @@
 
 namespace Appkeep\Laravel\Checks;
 
+use PDO;
 use Exception;
 use Appkeep\Laravel\Check;
 use Appkeep\Laravel\Result;
@@ -29,6 +30,9 @@ class DatabaseCheck extends Check
         $connection = $this->connection ?? config('database.default');
         $meta = ['connection' => $connection];
 
+        // Reduce connection timeout to 2 seconds.
+        $this->setPdoTimeout($connection, 2);
+
         try {
             DB::connection($connection)->getPdo();
         } catch (Exception $exception) {
@@ -37,5 +41,15 @@ class DatabaseCheck extends Check
         }
 
         return Result::ok()->meta($meta);
+    }
+
+    private function setPdoTimeout($connection, $timeout)
+    {
+        $optionsKey = 'database.connections.' . $connection . '.options';
+
+        app('config')->set(
+            $optionsKey,
+            app('config')->get($optionsKey, []) + [PDO::ATTR_TIMEOUT => $timeout]
+        );
     }
 }

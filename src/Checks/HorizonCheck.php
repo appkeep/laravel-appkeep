@@ -4,10 +4,13 @@ namespace Appkeep\Laravel\Checks;
 
 use Appkeep\Laravel\Check;
 use Appkeep\Laravel\Result;
+use Appkeep\Laravel\Enums\Scope;
 use Laravel\Horizon\Contracts\MasterSupervisorRepository;
 
 class HorizonCheck extends Check
 {
+    public $scope = Scope::GLOBAL;
+
     public function run()
     {
         $supervisors = app(MasterSupervisorRepository::class)->all();

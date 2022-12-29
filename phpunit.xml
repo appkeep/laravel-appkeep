@@ -26,4 +26,7 @@
         <!-- -->
         <env name="APPKEEP_SECRET" value="test_secret"/>
     </php>
+    <listeners>
+        <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
+    </listeners>
 </phpunit>

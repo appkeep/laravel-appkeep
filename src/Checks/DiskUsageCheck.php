@@ -4,9 +4,12 @@ namespace Appkeep\Laravel\Checks;
 
 use Appkeep\Laravel\Check;
 use Appkeep\Laravel\Result;
+use Appkeep\Laravel\Enums\Scope;
 
 class DiskUsageCheck extends Check
 {
+    public $scope = Scope::SERVER;
+
     protected $warnAt = 70;
     protected $failAt = 90;
 

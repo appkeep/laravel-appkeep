@@ -10,7 +10,12 @@ class AppkeepService
 
     public function version()
     {
-        return '0.3.0';
+        return '0.4.0';
+    }
+
+    public function client()
+    {
+        return new HttpClient(config('appkeep.key'));
     }
 
     public function forgetDefaultChecks()
@@ -37,6 +42,11 @@ class AppkeepService
         }
 
         return collect($this->checks);
+    }
+
+    public function registeredChecks()
+    {
+        return $this->checks()->keys();
     }
 
     public function replaceChecks(array $checks = [])

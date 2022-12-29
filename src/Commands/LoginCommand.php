@@ -2,8 +2,9 @@
 
 namespace Appkeep\Laravel\Commands;
 
+use Appkeep\Laravel\HttpClient;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Http;
+use Appkeep\Laravel\Events\LoginEvent;
 use Illuminate\Support\Facades\Artisan;
 
 class LoginCommand extends Command
@@ -19,6 +20,14 @@ class LoginCommand extends Command
             return;
         }
 
+        if (app()->environment('local')) {
+            $this->line('');
+            $this->warn('!!!!!! Local environment detected. !!!!!!');
+            $this->line('The login command is meant for production.');
+            $this->line('');
+            $this->line('');
+        }
+
         $this->logo();
 
         $this->line('Welcome to App:keep 🎉');
@@ -27,7 +36,7 @@ class LoginCommand extends Command
         $choice = $this->choice('How should we begin?', [
             'Sign up and create a new project.',
             'I\'ve got an existing project. I want to enter my key.',
-        ], 0);
+        ], 1);
 
         $choice == 'Sign up and create a new project.'
             ? $this->signUpAndCreateProject()
@@ -61,11 +70,9 @@ class LoginCommand extends Command
         } while (! $key);
 
         $this->comment('Verifying your key...');
-        $this->line('');
 
-        $status = Http::withHeaders(['Authorization' => 'Bearer ' . $key])
-            ->post(config('appkeep.endpoint'), [])
-            ->status();
+        $client = new HttpClient($key);
+        $status = $client->sendEvent(new LoginEvent())->status();
 
         if (403 === $status) {
             $this->error('Invalid project key.');
@@ -74,13 +81,34 @@ class LoginCommand extends Command
         }
 
         if (200 !== $status) {
-            $this->error('Unknown error.');
+            $this->error("Unknown error (received {$status}).");
             $this->line('');
             $this->line('Make sure your project key is valid.');
             $this->line('Reach us at hello@appkeep.co for support.');
+
+            return;
         }
 
-        $this->info('Project key is valid, writing it to your .env file...');
+        sleep(1);
+
+        $this->info('Key is verified.');
+        $this->line('- Writing APPKEEP_KEY to your .env file...');
+        $this->writeKeyToEnv($key);
+
+        $this->line('- Sending post-deploy event...');
+        $this->sendPostDeployEvent();
+
+        $this->info('Awesome. You are all set ✅');
+        $this->line('');
+        $this->line('');
+        $this->line('Pro tip:');
+        $this->line('Make sure you have a cronjob that runs "php artisan schedule:run" every minute.');
+        $this->line('Learn how to set this up here: https://laravel.com/docs/9.x/scheduling#running-the-scheduler');
+    }
+
+    private function writeKeyToEnv($key)
+    {
+        app('config')->set('appkeep.key', $key);
 
         $handler = fopen(base_path('.env'), 'a');
         fputs($handler, "\n\nAPPKEEP_KEY={$key}\n");
@@ -88,8 +116,13 @@ class LoginCommand extends Command
 
         if (file_exists(base_path('bootstrap/cache/config.php'))) {
             Artisan::call('config:cache');
-            $this->info('Configuration cache cleared!');
-            $this->info('Configuration cached successfully!');
+            $this->line('- Configuration cache cleared!');
+            $this->line('- Configuration cached successfully!');
         }
+    }
+
+    private function sendPostDeployEvent()
+    {
+        Artisan::call('appkeep:post-deploy');
     }
 }
