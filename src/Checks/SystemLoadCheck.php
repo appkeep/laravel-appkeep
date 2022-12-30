@@ -11,8 +11,13 @@ class SystemLoadCheck extends Check
 {
     public $scope = Scope::SERVER;
 
-    protected $warnAt = 70;
-    protected $failAt = 90;
+    protected $warnAt = 80;
+    protected $failAt = 95;
+
+    public static function make($name = null)
+    {
+        return (new SystemLoadCheck($name))->everyFiveMinutes();
+    }
 
     public function warnIfUsedPercentageIsAbove($value)
     {

@@ -29,7 +29,7 @@ trait RegistersDefaultChecks
 
             OptimizationCheck::make(),
 
-            SystemLoadCheck::make()->everyFiveMinutes(),
+            SystemLoadCheck::make(),
         ]);
     }
 }
