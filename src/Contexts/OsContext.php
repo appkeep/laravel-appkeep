@@ -11,7 +11,16 @@ class OsContext implements Arrayable
         return [
             'name' => php_uname('s'),
             'kernel' => php_uname('a'),
-            'build' => php_uname('v'),
+            'distro' => $this->getDistro(),
         ];
+    }
+
+    private function getDistro()
+    {
+        return rescue(function () {
+            return @parse_ini_string(shell_exec('cat /etc/lsb-release 2> /dev/null'))['DISTRIB_DESCRIPTION'];
+        }, function ($e) {
+            return php_uname('v');
+        });
     }
 }

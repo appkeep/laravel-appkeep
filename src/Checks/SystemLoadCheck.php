@@ -2,10 +2,10 @@
 
 namespace Appkeep\Laravel\Checks;
 
-use RuntimeException;
 use Appkeep\Laravel\Check;
 use Appkeep\Laravel\Result;
 use Appkeep\Laravel\Enums\Scope;
+use Appkeep\Laravel\Support\CpuCount;
 
 class SystemLoadCheck extends Check
 {
@@ -30,7 +30,7 @@ class SystemLoadCheck extends Check
 
     public function run()
     {
-        $maxLoad = ($this->totalCpus());
+        $maxLoad = CpuCount::get();
         $avgLoad = sys_getloadavg()[1]; // Avg system load in the last 5 minutes
 
         $loadPercentage = round(($avgLoad / $maxLoad) * 100, 2);
@@ -55,18 +55,5 @@ class SystemLoadCheck extends Check
         return Result::ok()
             ->summary("{$loadPercentage}%")
             ->meta($meta);
-    }
-
-    private function totalCpus()
-    {
-        if (PHP_OS === 'Linux') {
-            $output = shell_exec('grep -c ^processor /proc/cpuinfo');
-        } elseif (PHP_OS === 'Darwin' || PHP_OS === 'FreeBSD') {
-            $output = shell_exec('sysctl -n hw.ncpu');
-        } else {
-            throw new RuntimeException('Operating system not supported!');
-        }
-
-        return (int) trim($output);
     }
 }
