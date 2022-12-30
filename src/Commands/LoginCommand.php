@@ -6,12 +6,9 @@ use Appkeep\Laravel\HttpClient;
 use Illuminate\Console\Command;
 use Appkeep\Laravel\Events\LoginEvent;
 use Illuminate\Support\Facades\Artisan;
-use Appkeep\Laravel\Commands\Concerns\VerifiesProjectKey;
 
 class LoginCommand extends Command
 {
-    use VerifiesProjectKey;
-
     protected $signature = 'appkeep:login';
     protected $description = 'Sign in/register to Appkeep and create a project key.';
 
@@ -77,7 +74,7 @@ class LoginCommand extends Command
         $client = new HttpClient($key);
         $status = $client->sendEvent(new LoginEvent())->status();
 
-        if (! $this->verifyProjectKey($key)) {
+        if (403 === $status) {
             $this->error('Invalid project key.');
 
             return;
