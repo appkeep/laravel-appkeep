@@ -19,7 +19,7 @@ class UbuntuSecurityUpdatesCheck extends Check
 
     public function run()
     {
-        if (!ServerContext::isUbuntu()) {
+        if (! ServerContext::isUbuntu()) {
             throw new Exception('This check can only be run on Ubuntu servers.');
         }
 

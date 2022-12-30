@@ -18,7 +18,7 @@ class GitContext implements Arrayable
     {
         $output = shell_exec('cd ' . base_path() . ' && git rev-parse HEAD 2> /dev/null');
 
-        if (!$output) {
+        if (! $output) {
             return null;
         }
 

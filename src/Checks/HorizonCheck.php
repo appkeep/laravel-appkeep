@@ -24,7 +24,7 @@ class HorizonCheck extends Check
             fn ($master) => $master->status === 'paused'
         );
 
-        if (!empty($paused)) {
+        if (! empty($paused)) {
             return Result::warn('Horizon is paused.')->summary('Paused');
         }
 

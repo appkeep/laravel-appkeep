@@ -3,7 +3,6 @@
 namespace Appkeep\Laravel;
 
 use InvalidArgumentException;
-use Appkeep\Laravel\Check;
 
 class AppkeepService
 {
@@ -28,14 +27,14 @@ class AppkeepService
 
     public function checks(array $checks = [], $replace = false)
     {
-        if (!app()->runningInConsole()) {
+        if (! app()->runningInConsole()) {
             return;
         }
 
         foreach ($checks as $check) {
             $this->rejectIfDoesNotExtendBaseClass($check);
 
-            if (!$replace) {
+            if (! $replace) {
                 $this->rejectIfDuplicate($check);
             }
 
@@ -57,7 +56,7 @@ class AppkeepService
 
     protected function rejectIfDoesNotExtendBaseClass($check)
     {
-        if (!($check instanceof Check)) {
+        if (! ($check instanceof Check)) {
             throw new InvalidArgumentException(
                 sprintf('%s is not an instance of %s', get_class($check), Check::class)
             );

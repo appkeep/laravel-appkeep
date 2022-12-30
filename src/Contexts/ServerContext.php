@@ -23,7 +23,7 @@ class ServerContext implements Arrayable
     {
         if ($uuid = config('appkeep.server')) {
             // validate that it's uuid4
-            if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid)) {
+            if (! preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid)) {
                 throw new \Exception(
                     join("\n", [
                         'APPKEEP_SERVER_UID must be in UUID v4 format.',

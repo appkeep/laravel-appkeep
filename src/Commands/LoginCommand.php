@@ -70,15 +70,16 @@ class LoginCommand extends Command
     {
         do {
             $key = trim($this->secret('Enter your project key'));
-        } while (!$key);
+        } while (! $key);
 
         $this->comment('Verifying your key...');
 
         $client = new HttpClient($key);
         $status = $client->sendEvent(new LoginEvent())->status();
 
-        if (!$this->verifyProjectKey($key)) {
+        if (! $this->verifyProjectKey($key)) {
             $this->error('Invalid project key.');
+
             return;
         }
 

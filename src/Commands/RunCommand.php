@@ -18,7 +18,7 @@ class RunCommand extends Command
         $checks = Appkeep::checks();
 
         // Unless it's in force mode, only run the checks that are due.
-        if (!$this->option('all')) {
+        if (! $this->option('all')) {
             $checks = $checks->filter->isDue();
         }
 

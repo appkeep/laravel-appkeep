@@ -66,7 +66,7 @@ class AppkeepProvider extends ServiceProvider
 
         $this->app->booted(function () {
             // Don't schedule anything if project key is not set.
-            if (!config('appkeep.key')) {
+            if (! config('appkeep.key')) {
                 return;
             }
 

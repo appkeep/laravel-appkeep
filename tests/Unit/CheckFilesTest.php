@@ -9,8 +9,8 @@ use Appkeep\Laravel\Checks\HorizonCheck;
 use Appkeep\Laravel\Checks\StorageCheck;
 use Appkeep\Laravel\Checks\DatabaseCheck;
 use Appkeep\Laravel\Checks\DiskUsageCheck;
-use Appkeep\Laravel\Checks\ProductionModeCheck;
 use Appkeep\Laravel\Checks\SystemLoadCheck;
+use Appkeep\Laravel\Checks\ProductionModeCheck;
 use Appkeep\Laravel\Checks\UbuntuSecurityUpdatesCheck;
 
 class CheckFilesTest extends TestCase
