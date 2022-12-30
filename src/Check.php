@@ -1,8 +1,9 @@
 <?php
 
-namespace Appkeep\Laravel\Health;
+namespace Appkeep\Laravel;
 
 use Cron\CronExpression;
+use Appkeep\Laravel\Enums\Scope;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Console\Scheduling\ManagesFrequencies;
 
@@ -11,6 +12,8 @@ abstract class Check
     public $name;
 
     public $expression = '* * * * *';
+
+    public $scope = Scope::INSTANCE;
 
     use ManagesFrequencies {
         // These two methods are not supported.

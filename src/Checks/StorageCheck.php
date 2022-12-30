@@ -1,6 +1,6 @@
 <?php
 
-namespace Appkeep\Laravel\Health\Checks;
+namespace Appkeep\Laravel\Checks;
 
 use Exception;
 use Appkeep\Laravel\Enums\Status;

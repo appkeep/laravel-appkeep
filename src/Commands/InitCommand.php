@@ -4,7 +4,7 @@ namespace Appkeep\Laravel\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use Appkeep\Laravel\Health\Diagnostics\Server;
+use Appkeep\Laravel\Contexts\ServerContext;
 
 class InitCommand extends Command
 {
@@ -34,7 +34,7 @@ class InitCommand extends Command
     {
         if ($this->option('debug')) {
             $this->table(['Key', 'Value'], [
-                ['Server ID', Server::uniqueIdentifier()],
+                ['Server ID', ServerContext::uniqueIdentifier()],
             ]);
         }
     }

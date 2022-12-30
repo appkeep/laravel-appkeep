@@ -11,7 +11,12 @@ class AppkeepService
 
     public function version()
     {
-        return '0.3.0';
+        return '0.5.0';
+    }
+
+    public function client()
+    {
+        return new HttpClient(config('appkeep.key'));
     }
 
     public function forgetDefaultChecks()
@@ -23,14 +28,14 @@ class AppkeepService
 
     public function checks(array $checks = [], $replace = false)
     {
-        if (! app()->runningInConsole()) {
+        if (!app()->runningInConsole()) {
             return;
         }
 
         foreach ($checks as $check) {
             $this->rejectIfDoesNotExtendBaseClass($check);
 
-            if (! $replace) {
+            if (!$replace) {
                 $this->rejectIfDuplicate($check);
             }
 
@@ -40,6 +45,11 @@ class AppkeepService
         return collect($this->checks);
     }
 
+    public function registeredChecks()
+    {
+        return $this->checks()->keys();
+    }
+
     public function replaceChecks(array $checks = [])
     {
         return $this->checks($checks, true);
@@ -47,7 +57,7 @@ class AppkeepService
 
     protected function rejectIfDoesNotExtendBaseClass($check)
     {
-        if (! ($check instanceof Check)) {
+        if (!($check instanceof Check)) {
             throw new InvalidArgumentException(
                 sprintf('%s is not an instance of %s', get_class($check), Check::class)
             );

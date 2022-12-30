@@ -1,32 +1,29 @@
 <?php
 
-namespace Appkeep\Laravel\Health\Diagnostics;
+namespace Appkeep\Laravel\Contexts;
 
-class Server
+use Illuminate\Contracts\Support\Arrayable;
+
+class ServerContext implements Arrayable
 {
-    public static function name()
+    public static function isUbuntu()
     {
-        return gethostname();
+        return strpos(strtolower(php_uname()), 'ubuntu') !== false;
     }
 
-    public static function os()
+    public function toArray()
     {
-        if (PHP_OS !== 'Linux') {
-            return PHP_OS;
-        }
-
-        return rescue(function () {
-            return @parse_ini_string(shell_exec('cat /etc/lsb-release 2> /dev/null'))['DISTRIB_DESCRIPTION'];
-        }, function ($e) {
-            return PHP_OS;
-        });
+        return [
+            'name' => gethostname(),
+            'uid' => self::uniqueIdentifier(),
+        ];
     }
 
     public static function uniqueIdentifier()
     {
         if ($uuid = config('appkeep.server')) {
             // validate that it's uuid4
-            if (! preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid)) {
+            if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $uuid)) {
                 throw new \Exception(
                     join("\n", [
                         'APPKEEP_SERVER_UID must be in UUID v4 format.',
@@ -64,15 +61,10 @@ class Server
         return hash('sha256', join(".", $identifiers));
     }
 
-    public static function fqdn()
+    private static function fqdn()
     {
         $fqdn = gethostbyaddr('127.0.0.1');
 
         return ($fqdn !== 'localhost') ? $fqdn : gethostname();
-    }
-
-    public static function isUbuntu()
-    {
-        return strpos(strtolower(php_uname()), 'ubuntu') !== false;
     }
 }

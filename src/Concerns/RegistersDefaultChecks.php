@@ -3,11 +3,13 @@
 namespace Appkeep\Laravel\Concerns;
 
 use Appkeep\Laravel\Facades\Appkeep;
-use Appkeep\Laravel\Health\Checks\CacheCheck;
-use Appkeep\Laravel\Health\Checks\StorageCheck;
-use Appkeep\Laravel\Health\Checks\DatabaseCheck;
-use Appkeep\Laravel\Health\Checks\DiskUsageCheck;
-use Appkeep\Laravel\Health\Checks\EnvironmentCheck;
+use Appkeep\Laravel\Checks\CacheCheck;
+use Appkeep\Laravel\Checks\StorageCheck;
+use Appkeep\Laravel\Checks\DatabaseCheck;
+use Appkeep\Laravel\Checks\DiskUsageCheck;
+use Appkeep\Laravel\Checks\SystemLoadCheck;
+use Appkeep\Laravel\Checks\OptimizationCheck;
+use Appkeep\Laravel\Checks\ProductionModeCheck;
 
 trait RegistersDefaultChecks
 {
@@ -15,7 +17,7 @@ trait RegistersDefaultChecks
     {
         Appkeep::checks([
 
-            EnvironmentCheck::make(),
+            ProductionModeCheck::make(),
 
             StorageCheck::make(),
 
@@ -24,6 +26,10 @@ trait RegistersDefaultChecks
             CacheCheck::make(),
 
             DiskUsageCheck::make(),
+
+            OptimizationCheck::make(),
+
+            SystemLoadCheck::make()->everyFiveMinutes(),
         ]);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Appkeep\Laravel\Health;
+namespace Appkeep\Laravel;
 
 use Appkeep\Laravel\Enums\Status;
 

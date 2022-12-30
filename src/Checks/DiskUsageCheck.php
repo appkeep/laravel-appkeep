@@ -1,12 +1,15 @@
 <?php
 
-namespace Appkeep\Laravel\Health\Checks;
+namespace Appkeep\Laravel\Checks;
 
-use Appkeep\Laravel\Health\Check;
-use Appkeep\Laravel\Health\Result;
+use Appkeep\Laravel\Check;
+use Appkeep\Laravel\Result;
+use Appkeep\Laravel\Enums\Scope;
 
 class DiskUsageCheck extends Check
 {
+    public $scope = Scope::SERVER;
+
     protected $warnAt = 70;
     protected $failAt = 90;
 
@@ -27,7 +30,7 @@ class DiskUsageCheck extends Check
     public function run()
     {
         $freeSpace = disk_free_space(base_path());
-        $usedSpace = $freeSpace / disk_total_space(base_path());
+        $usedSpace = 1 - ($freeSpace / disk_total_space(base_path()));
         $usedSpace = round($usedSpace * 100);
 
         $meta = [
@@ -54,13 +57,13 @@ class DiskUsageCheck extends Check
 
     private function humanFileSize($size, $unit = "")
     {
-        if ((! $unit && $size >= 1 << 30) || $unit == "GB") {
+        if ((!$unit && $size >= 1 << 30) || $unit == "GB") {
             return number_format($size / (1 << 30), 2) . "GB";
         }
-        if ((! $unit && $size >= 1 << 20) || $unit == "MB") {
+        if ((!$unit && $size >= 1 << 20) || $unit == "MB") {
             return number_format($size / (1 << 20), 2) . "MB";
         }
-        if ((! $unit && $size >= 1 << 10) || $unit == "KB") {
+        if ((!$unit && $size >= 1 << 10) || $unit == "KB") {
             return number_format($size / (1 << 10), 2) . "KB";
         }
 

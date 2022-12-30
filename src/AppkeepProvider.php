@@ -10,6 +10,7 @@ use Appkeep\Laravel\Backups\BackupService;
 use Appkeep\Laravel\Commands\LoginCommand;
 use Appkeep\Laravel\Commands\BackupCommand;
 use Illuminate\Console\Scheduling\Schedule;
+use Appkeep\Laravel\Commands\PostDeployCommand;
 use Appkeep\Laravel\Concerns\RegistersDefaultChecks;
 
 class AppkeepProvider extends ServiceProvider
@@ -37,10 +38,15 @@ class AppkeepProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (! $this->app->runningInConsole()) {
-            return;
-        }
+        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
 
+        if ($this->app->runningInConsole()) {
+            $this->bootForConsole();
+        }
+    }
+
+    public function bootForConsole()
+    {
         $this->publishes([
             __DIR__ . '/../config/appkeep.php' => config_path('appkeep.php'),
         ], 'config');
@@ -55,11 +61,12 @@ class AppkeepProvider extends ServiceProvider
             InitCommand::class,
             LoginCommand::class,
             BackupCommand::class,
+            PostDeployCommand::class,
         ]);
 
         $this->app->booted(function () {
             // Don't schedule anything if project key is not set.
-            if (! config('appkeep.key')) {
+            if (!config('appkeep.key')) {
                 return;
             }
 

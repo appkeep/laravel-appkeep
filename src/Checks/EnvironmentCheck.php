@@ -1,6 +1,6 @@
 <?php
 
-namespace Appkeep\Laravel\Health\Checks;
+namespace Appkeep\Laravel\Checks;
 
 use Appkeep\Laravel\Health\Check;
 use Appkeep\Laravel\Health\Result;

@@ -1,14 +1,17 @@
 <?php
 
-namespace Appkeep\Laravel\Health\Checks;
+namespace Appkeep\Laravel\Checks;
 
 use Exception;
-use Appkeep\Laravel\Health\Check;
-use Appkeep\Laravel\Health\Result;
-use Appkeep\Laravel\Health\Diagnostics\Server;
+use Appkeep\Laravel\Check;
+use Appkeep\Laravel\Result;
+use Appkeep\Laravel\Enums\Scope;
+use Appkeep\Laravel\Contexts\ServerContext;
 
 class UbuntuSecurityUpdatesCheck extends Check
 {
+    public $scope = Scope::SERVER;
+
     public static function make($name = null)
     {
         return (new UbuntuSecurityUpdatesCheck($name))->daily();
@@ -16,7 +19,7 @@ class UbuntuSecurityUpdatesCheck extends Check
 
     public function run()
     {
-        if (! Server::isUbuntu()) {
+        if (!ServerContext::isUbuntu()) {
             throw new Exception('This check can only be run on Ubuntu servers.');
         }
 
@@ -31,7 +34,7 @@ class UbuntuSecurityUpdatesCheck extends Check
         if ($securityUpdates > 0) {
             $message = sprintf('You have %d pending security updates for Ubuntu', $securityUpdates);
 
-            return Result::warn($message)->summary($securityUpdates);
+            return Result::warn($message);
         }
 
         return Result::ok();

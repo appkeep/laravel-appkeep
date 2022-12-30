@@ -5,8 +5,7 @@ namespace Appkeep\Laravel\Commands;
 use Illuminate\Console\Command;
 use Appkeep\Laravel\Enums\Status;
 use Appkeep\Laravel\Facades\Appkeep;
-use Appkeep\Laravel\Health\Actions\RunChecks;
-use Appkeep\Laravel\Health\Actions\SendHeartbeat;
+use Appkeep\Laravel\Events\ChecksEvent;
 
 class RunCommand extends Command
 {
@@ -18,7 +17,7 @@ class RunCommand extends Command
         $checks = Appkeep::checks();
 
         // Unless it's in force mode, only run the checks that are due.
-        if (! $this->option('all')) {
+        if (!$this->option('all')) {
             $checks = $checks->filter->isDue();
         }
 
@@ -28,32 +27,43 @@ class RunCommand extends Command
             return;
         }
 
-        $results = (new RunChecks)($checks);
+        $event = new ChecksEvent();
 
-        $this->table(
-            ['Check', 'Outcome', 'Message'],
-            $results->map(fn ($result) => $this->toConsoleTableRow($result))
-        );
+        $consoleOutput = [];
 
-        rescue(
-            fn () => (new SendHeartbeat)($results),
-            function (\Exception $e) {
-                $this->warn('Failed to post results to Appkeep.');
-                $this->line($e->getMessage());
+        foreach ($checks as $check) {
+            try {
+                $result = $check->run();
+            } catch (\Exception $e) {
+                $result = Result::crash($e->getMessage());
+            } finally {
+                $event->addResult($check, $result);
+                $consoleOutput[] = $this->toConsoleTableRow($check->name, $result);
             }
-        );
+        }
+
+        try {
+            $this->postResultsToAppkeep($event);
+        } catch (\Exception $e) {
+            $this->warn('Failed to post results to Appkeep.');
+            $this->line($e->getMessage());
+        }
+
+        $this->table(['Check', 'Outcome', 'Message'], $consoleOutput);
     }
 
-    private function toConsoleTableRow(array $result)
+    private function postResultsToAppkeep(ChecksEvent $event)
+    {
+        Appkeep::client()->sendEvent($event)->throw();
+    }
+
+    private function toConsoleTableRow($name, Result $result)
     {
         $status = [
             Status::CRASH => '❌',
-            Status::OK => sprintf(
-                '✅ %s',
-                $result['result']['summary'] ?? 'OK'
-            ),
-            Status::WARN => '⚠️',
-            Status::FAIL => '🚨',
+            Status::OK => sprintf('✅ %s', $result->summary ?? 'OK'),
+            Status::WARN => sprintf('⚠️  %s', $result->summary ?? ''),
+            Status::FAIL => sprintf('🚨  %s', $result->summary ?? ''),
         ];
 
         return [

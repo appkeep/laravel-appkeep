@@ -1,17 +1,19 @@
 <?php
 
-namespace Appkeep\Laravel\Health\Checks;
+namespace Appkeep\Laravel\Checks;
 
 use Exception;
-use Appkeep\Laravel\Enums\Status;
-use Appkeep\Laravel\Health\Check;
-use Appkeep\Laravel\Health\Result;
+use Appkeep\Laravel\Check;
+use Appkeep\Laravel\Result;
 use Illuminate\Support\Facades\Cache;
 
 class CacheCheck extends Check
 {
     private $driver;
 
+    /**
+     * Check a different cache driver
+     */
     public function driver($driver)
     {
         $this->driver = $driver;
@@ -24,19 +26,16 @@ class CacheCheck extends Check
      */
     public function run()
     {
-        $driver = $this->driver ?? config('cache.default');
-
-        $result = (new Result(Status::OK))->meta([
-            'driver' => $driver,
-        ]);
+        $driver = $this->driver ?? config('cache.default', 'file');
+        $meta = ['driver' => $driver];
 
         try {
             $this->testCache($driver);
-
-            return $result;
         } catch (Exception $e) {
-            return $result->failWith($e->getMessage());
+            return Result::fail($e->getMessage())->meta($meta);
         }
+
+        return Result::ok()->meta($meta);
     }
 
     protected function testCache($driver)
