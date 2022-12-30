@@ -4,7 +4,7 @@ namespace Appkeep\Laravel\Commands;
 
 use RuntimeException;
 use Illuminate\Console\Command;
-use Appkeep\Laravel\Health\Diagnostics\Laravel;
+use Appkeep\Laravel\Diagnostics\Laravel;
 use Appkeep\Laravel\Commands\Concerns\InteractsWithComposer;
 
 class BackupCommand extends Command
@@ -55,7 +55,7 @@ class BackupCommand extends Command
 
     private function overrideSpatieBackupConfig()
     {
-        if (! file_exists(config_path('backup.php'))) {
+        if (!file_exists(config_path('backup.php'))) {
             return;
         }
 
@@ -66,7 +66,7 @@ class BackupCommand extends Command
         $this->line('To avoid conflicts / confusion, we will delete your backup config.');
 
 
-        if (! $this->confirm('Delete ' . config_path('backup.php') . '?')) {
+        if (!$this->confirm('Delete ' . config_path('backup.php') . '?')) {
             $this->line('');
             $this->line('Aborting.');
             $this->line('');
@@ -88,7 +88,7 @@ class BackupCommand extends Command
 
         $confirm = $this->confirm('Appkeep will install ' . $package . ' now. Do you want to continue?');
 
-        if (! $confirm) {
+        if (!$confirm) {
             $this->line('Aborting...');
             exit;
         }

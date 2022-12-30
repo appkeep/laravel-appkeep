@@ -4,8 +4,8 @@ namespace Appkeep\Laravel\Checks;
 
 use Exception;
 use Appkeep\Laravel\Enums\Status;
-use Appkeep\Laravel\Health\Check;
-use Appkeep\Laravel\Health\Result;
+use Appkeep\Laravel\Check;
+use Appkeep\Laravel\Result;
 use Illuminate\Support\Facades\Storage;
 
 class StorageCheck extends Check

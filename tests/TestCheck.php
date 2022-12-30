@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use Appkeep\Laravel\Health\Check;
-use Appkeep\Laravel\Health\Result;
+use Appkeep\Laravel\Check;
+use Appkeep\Laravel\Result;
 
 class TestCheck extends Check
 {

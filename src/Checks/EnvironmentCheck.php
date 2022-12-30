@@ -2,8 +2,8 @@
 
 namespace Appkeep\Laravel\Checks;
 
-use Appkeep\Laravel\Health\Check;
-use Appkeep\Laravel\Health\Result;
+use Appkeep\Laravel\Check;
+use Appkeep\Laravel\Result;
 
 class EnvironmentCheck extends Check
 {
@@ -17,7 +17,7 @@ class EnvironmentCheck extends Check
     }
 
     /**
-     * @var \Appkeep\Laravel\Health\Result
+     * @var \Appkeep\Laravel\Result
      */
     public function run()
     {

@@ -20,7 +20,7 @@ return [
      */
     'server' => env('APPKEEP_SERVER_UID'),
 
-    /*
+    /**
      * Used to verify requests coming to explore endpoint are actually coming from Appkeep.
      * Please DO NOT MODIFY this array unless you know what you're doing.
      */

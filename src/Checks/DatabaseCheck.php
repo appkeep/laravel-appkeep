@@ -23,7 +23,7 @@ class DatabaseCheck extends Check
     }
 
     /**
-     * @var \Appkeep\Laravel\Health\Result
+     * @var \Appkeep\Laravel\Result
      */
     public function run()
     {

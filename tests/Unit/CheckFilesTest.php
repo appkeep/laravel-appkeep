@@ -3,14 +3,14 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
-use Appkeep\Laravel\Health\Check;
-use Appkeep\Laravel\Health\Checks\CacheCheck;
-use Appkeep\Laravel\Health\Checks\HorizonCheck;
-use Appkeep\Laravel\Health\Checks\StorageCheck;
-use Appkeep\Laravel\Health\Checks\DatabaseCheck;
-use Appkeep\Laravel\Health\Checks\DiskUsageCheck;
-use Appkeep\Laravel\Health\Checks\EnvironmentCheck;
-use Appkeep\Laravel\Health\Checks\UbuntuSecurityUpdatesCheck;
+use Appkeep\Laravel\Check;
+use Appkeep\Laravel\Checks\CacheCheck;
+use Appkeep\Laravel\Checks\HorizonCheck;
+use Appkeep\Laravel\Checks\StorageCheck;
+use Appkeep\Laravel\Checks\DatabaseCheck;
+use Appkeep\Laravel\Checks\DiskUsageCheck;
+use Appkeep\Laravel\Checks\EnvironmentCheck;
+use Appkeep\Laravel\Checks\UbuntuSecurityUpdatesCheck;
 
 class CheckFilesTest extends TestCase
 {

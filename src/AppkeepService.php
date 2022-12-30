@@ -3,7 +3,7 @@
 namespace Appkeep\Laravel;
 
 use InvalidArgumentException;
-use Appkeep\Laravel\Health\Check;
+use Appkeep\Laravel\Check;
 
 class AppkeepService
 {

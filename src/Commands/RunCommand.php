@@ -2,6 +2,7 @@
 
 namespace Appkeep\Laravel\Commands;
 
+use Appkeep\Laravel\Result;
 use Illuminate\Console\Command;
 use Appkeep\Laravel\Enums\Status;
 use Appkeep\Laravel\Facades\Appkeep;
@@ -67,9 +68,9 @@ class RunCommand extends Command
         ];
 
         return [
-            $result['check'],
-            $status[$result['result']['status']],
-            $result['result']['message'] ?? '',
+            $name,
+            $status[$result->status],
+            $result->message ?? '',
         ];
     }
 }

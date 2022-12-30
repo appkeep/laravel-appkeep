@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Carbon\Carbon;
 use Tests\TestCase;
 use Tests\TestCheck;
-use Appkeep\Laravel\Health\Result;
+use Appkeep\Laravel\Result;
 use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\Facades\Http;
 
