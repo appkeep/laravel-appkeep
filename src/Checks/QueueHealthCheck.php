@@ -62,7 +62,7 @@ class QueueHealthCheck extends Check
      * How often should we dispatch the test job?
      * Defaults to every 10 minutes.
      */
-    public function dispatchFrequency($minutes)
+    public function dispatchEveryMinutes($minutes)
     {
         $this->dispatchMinutes = $minutes;
 

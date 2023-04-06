@@ -99,7 +99,7 @@ class QueueHealthCheckTest extends TestCase
         QueueHealthCheck::make()->run();
         Queue::assertNothingPushed();
 
-        QueueHealthCheck::make()->dispatchFrequency(1)->run();
+        QueueHealthCheck::make()->dispatchEveryMinutes(1)->run();
         $this->assertEquals(1, Queue::size('default'));
     }
 
