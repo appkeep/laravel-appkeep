@@ -48,7 +48,7 @@ class QueueHealthCheck extends Check
 
     public static function make($queue = 'default')
     {
-        return (new static('queue-check.' . $queue))->queue($queue);
+        return (new static($queue . '_queue'))->queue($queue);
     }
 
     public function queue($queue)
@@ -100,6 +100,11 @@ class QueueHealthCheck extends Check
             } elseif ($lastJobDuration >= $this->warnAt) {
                 $result = Result::warn("{$this->queue} wait time is getting longer. (> {$duration})");
             }
+
+            $result->meta([
+                'queue' => $this->queue,
+                'waitTime' => $duration,
+            ]);
         }
 
         $dispatchAgain = $shouldDispatchNewJob && (
