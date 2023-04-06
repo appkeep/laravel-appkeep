@@ -5,7 +5,7 @@ namespace Appkeep\Laravel\Checks;
 use Appkeep\Laravel\Check;
 use Appkeep\Laravel\Result;
 use Appkeep\Laravel\Enums\Scope;
-use Appkeep\Laravel\Support\CpuCount;
+use Appkeep\Laravel\Contexts\SpecsContext;
 
 class SystemLoadCheck extends Check
 {
@@ -35,7 +35,7 @@ class SystemLoadCheck extends Check
 
     public function run()
     {
-        $maxLoad = CpuCount::get();
+        $maxLoad = SpecsContext::cpuCount();
         $avgLoad = sys_getloadavg()[1]; // Avg system load in the last 5 minutes
 
         $loadPercentage = round(($avgLoad / $maxLoad) * 100, 2);
