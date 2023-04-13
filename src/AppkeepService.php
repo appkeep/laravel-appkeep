@@ -3,9 +3,12 @@
 namespace Appkeep\Laravel;
 
 use InvalidArgumentException;
+use Appkeep\Laravel\Concerns\ReportsScheduledTaskOutputs;
 
 class AppkeepService
 {
+    use ReportsScheduledTaskOutputs;
+
     public $checks = [];
 
     public function version()

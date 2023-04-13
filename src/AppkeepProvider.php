@@ -4,6 +4,7 @@ namespace Appkeep\Laravel;
 
 use Illuminate\Support\ServiceProvider;
 use Appkeep\Laravel\Commands\RunCommand;
+use Illuminate\Console\Scheduling\Event;
 use Appkeep\Laravel\Commands\InitCommand;
 use Appkeep\Laravel\Commands\ListCommand;
 use Appkeep\Laravel\Commands\LoginCommand;
@@ -66,7 +67,29 @@ class AppkeepProvider extends ServiceProvider
 
             $schedule->command('appkeep:run')
                 ->everyMinute()
-                ->runInBackground();
+                ->runInBackground()
+                ->evenInMaintenanceMode();
+
+            collect($schedule->events())
+                ->filter(function ($event) {
+                    return $event->command;
+                })
+                ->each(function (Event $event) {
+                    /**
+                     * @var AppkeepService
+                     */
+                    $appkeep = app('appkeep');
+
+                    $event->before(fn () => $appkeep->scheduledTaskStarted($event));
+
+                    $event->onFailureWithOutput(
+                        fn ($output) => $appkeep->scheduledTaskFailed($event, $output)
+                    );
+
+                    $event->onSuccessWithOutput(
+                        fn ($output) => $appkeep->scheduledTaskCompleted($event, $output)
+                    );
+                });
         });
     }
 }

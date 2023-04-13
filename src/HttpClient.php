@@ -4,6 +4,7 @@ namespace Appkeep\Laravel;
 
 use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\Facades\Http;
+use Appkeep\Laravel\Events\CronjobEvent;
 use Appkeep\Laravel\Events\AbstractEvent;
 
 class HttpClient
@@ -27,6 +28,14 @@ class HttpClient
             config('appkeep.endpoint'),
             $event->toArray()
         );
+    }
+
+    /**
+     * Send cronjob result
+     */
+    public function sendCronjobOutput(CronjobOutput $output)
+    {
+        return $this->sendEvent(new CronjobEvent($output));
     }
 
     protected function defaultHeaders()
