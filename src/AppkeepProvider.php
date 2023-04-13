@@ -72,7 +72,7 @@ class AppkeepProvider extends ServiceProvider
 
             collect($schedule->events())
                 ->filter(function ($event) {
-                    return $event->command;
+                    return $event->command && ! str_contains($event->command, 'appkeep:run');
                 })
                 ->each(function (Event $event) {
                     /**
