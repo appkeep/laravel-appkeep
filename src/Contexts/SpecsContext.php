@@ -45,7 +45,8 @@ class SpecsContext implements Arrayable
     private function totalMemory()
     {
         if (PHP_OS === 'Linux') {
-            $output = shell_exec('free -g | grep Mem | awk \'{print $2}\'');
+            $output = shell_exec('free -m | grep Mem | awk \'{print $2}\'');
+            $output = $output / 1024;  // convert MB to GB
         } elseif (PHP_OS === 'Darwin' || PHP_OS === 'FreeBSD') {
             $output = shell_exec('sysctl -n hw.memsize');
             $output = $output / 1073741824;  // convert bytes to GB
@@ -53,6 +54,6 @@ class SpecsContext implements Arrayable
             throw new RuntimeException('Operating system not supported!');
         }
 
-        return (int) trim($output);
+        return (int) round(trim($output));
     }
 }
