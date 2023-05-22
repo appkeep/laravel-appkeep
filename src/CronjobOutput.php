@@ -2,6 +2,7 @@
 
 namespace Appkeep\Laravel;
 
+use DateTime;
 use Illuminate\Console\Scheduling\Event;
 use Appkeep\Laravel\Support\ScheduledTaskId;
 
@@ -10,6 +11,8 @@ class CronjobOutput
     public bool $success = true;
     public ?float $duration = null;
     public ?string $output = null;
+    public ?DateTime $startedAt = null;
+    public ?DateTime $finishedAt = null;
 
     public function __construct(public string $id)
     {
@@ -46,6 +49,20 @@ class CronjobOutput
     public function setOutput(string $output)
     {
         $this->output = $output;
+
+        return $this;
+    }
+
+    public function setStartedAt(DateTime $startedAt)
+    {
+        $this->startedAt = $startedAt;
+
+        return $this;
+    }
+
+    public function setFinishedAt(DateTime $finishedAt)
+    {
+        $this->finishedAt = $finishedAt;
 
         return $this;
     }

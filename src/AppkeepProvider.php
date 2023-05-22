@@ -80,7 +80,9 @@ class AppkeepProvider extends ServiceProvider
                      */
                     $appkeep = app('appkeep');
 
-                    $event->before(fn () => $appkeep->scheduledTaskStarted($event));
+                    $event->before(
+                        fn () => $appkeep->scheduledTaskStarted($event)
+                    );
 
                     $event->onFailureWithOutput(
                         fn ($output) => $appkeep->scheduledTaskFailed($event, $output)

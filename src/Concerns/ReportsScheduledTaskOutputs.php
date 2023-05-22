@@ -7,25 +7,30 @@ use Illuminate\Console\Scheduling\Event;
 
 trait ReportsScheduledTaskOutputs
 {
-    private $scheduledTaskStart;
+    private $scheduledTaskStartMs;
+    private $scheduledTaskStartedAt;
 
     public function scheduledTaskStarted(Event $task)
     {
-        $this->scheduledTaskStart = microtime(true);
+        $this->scheduledTaskStartMs = microtime(true);
+        $this->scheduledTaskStartedAt = now();
     }
 
     private function getScheduledTaskRunDuration()
     {
-        return microtime(true) - $this->scheduledTaskStart;
+        return microtime(true) - $this->scheduledTaskStartMs;
     }
 
     public function scheduledTaskFailed(Event $task, $output)
     {
         $duration = $this->getScheduledTaskRunDuration();
+        $finishedAt = now();
 
         $output = CronjobOutput::fromScheduledTask($task)
             ->failed()
             ->setDuration($duration)
+            ->setStartedAt($this->scheduledTaskStartedAt)
+            ->setFinishedAt($finishedAt)
             ->setOutput($output);
 
         try {
@@ -38,10 +43,13 @@ trait ReportsScheduledTaskOutputs
     public function scheduledTaskCompleted(Event $task, $output)
     {
         $duration = $this->getScheduledTaskRunDuration();
+        $finishedAt = now();
 
         $output = CronjobOutput::fromScheduledTask($task)
             ->succeeded()
             ->setDuration($duration)
+            ->setStartedAt($this->scheduledTaskStartedAt)
+            ->setFinishedAt($finishedAt)
             ->setOutput($output);
 
         try {
