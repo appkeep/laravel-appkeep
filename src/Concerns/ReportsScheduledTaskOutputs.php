@@ -12,13 +12,16 @@ trait ReportsScheduledTaskOutputs
 
     public function scheduledTaskStarted(Event $task)
     {
-        $this->scheduledTaskStartMs = microtime(true);
+        $this->scheduledTaskStartMs = hrtime(true);
         $this->scheduledTaskStartedAt = now();
     }
 
-    private function getScheduledTaskRunDuration()
+    /**
+     * Get the duration of the scheduled task run in milliseconds
+     */
+    private function getScheduledTaskRunDuration(): int
     {
-        return microtime(true) - $this->scheduledTaskStartMs;
+        return round((hrtime(true) - $this->scheduledTaskStartMs) / 1e+6);
     }
 
     public function scheduledTaskFailed(Event $task, $output)
