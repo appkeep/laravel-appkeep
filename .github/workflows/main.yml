@@ -17,8 +17,8 @@ jobs:
         # Disable testing on windows for now...
         # os: [ubuntu-latest, windows-latest]
         os: [ubuntu-latest]
-        php: [7.4, 8.0, 8.1]
-        laravel: [7.*, 8.*, 9.*]
+        php: [7.4, 8.0, 8.1, 8.2]
+        laravel: [7.*, 8.*, 9.*, 10.*]
         #stability: [prefer-lowest, prefer-stable]
         stability: [prefer-stable]
         include:
@@ -28,17 +28,24 @@ jobs:
             testbench: ^6.6
           - laravel: 9.*
             testbench: 7.*
+          - laravel: 10.*
+            testbench: 8.* 
         # Laravel 7 has no support for PHP 8.1
-        exclude:
-          - laravel: 7.*
-            php: 8.1
-          # Older versions of L7 doesn't support PHP 8
+        exclude:            
           - laravel: 7.*
             php: 8
             stability: prefer-lowest
+          - laravel: 7.*
+            php: 8.1
+          - laravel: 7.*
+            php: 8.2            
           # Laravel 9 doesn't support < PHP 8
           - laravel: 9.*
             php: 7.4
+          - laravel: 10.*
+            php: 7.4
+          - laravel: 10.*
+            php: 8.0
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 

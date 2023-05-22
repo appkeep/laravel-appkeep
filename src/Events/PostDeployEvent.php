@@ -4,6 +4,7 @@ namespace Appkeep\Laravel\Events;
 
 use Appkeep\Laravel\Facades\Appkeep;
 use Appkeep\Laravel\Contexts\GitContext;
+use Appkeep\Laravel\Contexts\SpecsContext;
 use Illuminate\Console\Scheduling\Schedule;
 use Appkeep\Laravel\Support\ScheduledEventId;
 
@@ -23,6 +24,7 @@ class PostDeployEvent extends AbstractEvent
 
         $this->addDependenciesContext()
             ->setContext('git', new GitContext)
+            ->setContext('specs', new SpecsContext)
             ->setContext('appkeep', [
                 'url' => route('appkeep.explore'),
             ]);

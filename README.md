@@ -13,7 +13,7 @@ Using App:keep, you can monitor multiple Laravel applications from a single dash
 
 ## Documentation
 
-Our package documentation [is here](https://docs.appkeep.co/laravel-package/quickstart).
+Our package documentation [is here](https://appkeep.co/docs/laravel-package/quickstart).
 
 ### Changelog
 
