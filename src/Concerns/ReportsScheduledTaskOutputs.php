@@ -2,7 +2,7 @@
 
 namespace Appkeep\Laravel\Concerns;
 
-use Appkeep\Laravel\CronjobOutput;
+use Appkeep\Laravel\ScheduledTaskOutput;
 use Illuminate\Console\Scheduling\Event;
 
 trait ReportsScheduledTaskOutputs
@@ -26,7 +26,7 @@ trait ReportsScheduledTaskOutputs
         $duration = $this->getScheduledTaskRunDuration();
         $finishedAt = now();
 
-        $output = CronjobOutput::fromScheduledTask($task)
+        $output = ScheduledTaskOutput::fromScheduledTask($task)
             ->failed()
             ->setDuration($duration)
             ->setStartedAt($this->scheduledTaskStartedAt)
@@ -34,7 +34,7 @@ trait ReportsScheduledTaskOutputs
             ->setOutput($output);
 
         try {
-            $this->client()->sendCronjobOutput($output);
+            $this->client()->sendScheduledTaskOutput($output);
         } catch (\Exception $e) {
             report($e);
         }
@@ -45,7 +45,7 @@ trait ReportsScheduledTaskOutputs
         $duration = $this->getScheduledTaskRunDuration();
         $finishedAt = now();
 
-        $output = CronjobOutput::fromScheduledTask($task)
+        $output = ScheduledTaskOutput::fromScheduledTask($task)
             ->succeeded()
             ->setDuration($duration)
             ->setStartedAt($this->scheduledTaskStartedAt)
@@ -53,7 +53,7 @@ trait ReportsScheduledTaskOutputs
             ->setOutput($output);
 
         try {
-            $this->client()->sendCronjobOutput($output);
+            $this->client()->sendScheduledTaskOutput($output);
         } catch (\Exception $e) {
             report($e);
         }

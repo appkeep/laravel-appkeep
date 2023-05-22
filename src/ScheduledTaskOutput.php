@@ -6,7 +6,7 @@ use DateTime;
 use Illuminate\Console\Scheduling\Event;
 use Appkeep\Laravel\Support\ScheduledTaskId;
 
-class CronjobOutput
+class ScheduledTaskOutput
 {
     public bool $success = true;
     public ?float $duration = null;

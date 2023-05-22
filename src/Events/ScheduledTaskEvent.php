@@ -2,13 +2,13 @@
 
 namespace Appkeep\Laravel\Events;
 
-use Appkeep\Laravel\CronjobOutput;
+use Appkeep\Laravel\ScheduledTaskOutput;
 
-class CronjobEvent extends AbstractEvent
+class ScheduledTaskEvent extends AbstractEvent
 {
-    protected $name = 'cronjob';
+    protected $name = 'scheduled-task';
 
-    public function __construct(private CronjobOutput $output)
+    public function __construct(private ScheduledTaskOutput $output)
     {
         parent::__construct();
     }
@@ -23,6 +23,8 @@ class CronjobEvent extends AbstractEvent
                     'success' => $this->output->success,
                     'duration' => $this->output->duration,
                     'output' => $this->output->output,
+                    'started_at' => $this->output->startedAt,
+                    'finished_at' => $this->output->finishedAt,
                 ],
             ]
         );

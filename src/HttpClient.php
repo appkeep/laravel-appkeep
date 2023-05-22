@@ -4,8 +4,8 @@ namespace Appkeep\Laravel;
 
 use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\Facades\Http;
-use Appkeep\Laravel\Events\CronjobEvent;
 use Appkeep\Laravel\Events\AbstractEvent;
+use Appkeep\Laravel\Events\ScheduledTaskEvent;
 
 class HttpClient
 {
@@ -31,11 +31,11 @@ class HttpClient
     }
 
     /**
-     * Send cronjob result
+     * Send scheduled task result
      */
-    public function sendCronjobOutput(CronjobOutput $output)
+    public function sendScheduledTaskOutput(ScheduledTaskOutput $output)
     {
-        return $this->sendEvent(new CronjobEvent($output));
+        return $this->sendEvent(new ScheduledTaskEvent($output))->throw();
     }
 
     protected function defaultHeaders()
