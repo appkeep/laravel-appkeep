@@ -8,14 +8,16 @@ use Appkeep\Laravel\Support\ScheduledTaskId;
 
 class ScheduledTaskOutput
 {
+    public string $id;
     public bool $success = true;
     public ?float $duration = null;
     public ?string $output = null;
     public ?DateTime $startedAt = null;
     public ?DateTime $finishedAt = null;
 
-    public function __construct(public string $id)
+    public function __construct(string $id)
     {
+        $this->id = $id;
     }
 
     public static function fromScheduledTask(Event $task)
