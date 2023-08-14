@@ -22,9 +22,23 @@ class ScheduledTaskOutput
 
     public static function fromScheduledTask(Event $task)
     {
-        return new self(
-            ScheduledTaskId::get($task)
-        );
+        $output = new self(ScheduledTaskId::get($task));
+
+        return $output->setOutput(self::getEventOutput($task));
+    }
+
+    private static function getEventOutput(Event $event)
+    {
+        if (
+            ! $event->output ||
+            $event->output === $event->getDefaultOutput() ||
+            $event->shouldAppendOutput ||
+            ! file_exists($event->output)
+        ) {
+            return '';
+        }
+
+        return trim(file_get_contents($event->output));
     }
 
     public function succeeded()

@@ -1,6 +1,6 @@
 <?php
 
-namespace Appkeep\Laravel\Tests\Feature;
+namespace Tests\Feature;
 
 use Tests\TestCase;
 use Appkeep\Laravel\HttpClient;

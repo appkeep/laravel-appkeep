@@ -13,14 +13,17 @@ class AppkeepService
 
     public function version()
     {
-        return '0.6.0';
+        return '0.6.1';
     }
 
     public function client()
     {
-        return new HttpClient(config('appkeep.key'));
+        return resolve(HttpClient::class);
     }
 
+    /**
+     * Removes all of the default checks.
+     */
     public function forgetDefaultChecks()
     {
         $this->checks = [];
