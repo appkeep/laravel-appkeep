@@ -7,8 +7,20 @@ use Illuminate\Console\Scheduling\Event;
 
 trait ReportsScheduledTaskOutputs
 {
+    public $scheduledTaskMonitoringEnabled = true;
+
     private $scheduledTaskStartMs;
     private $scheduledTaskStartedAt;
+
+    /**
+     * Disables scheduled task monitoring.
+     */
+    public function dontMonitorScheduledTasks()
+    {
+        $this->scheduledTaskMonitoringEnabled = false;
+
+        return $this;
+    }
 
     public function scheduledTaskStarted(Event $task)
     {
@@ -24,8 +36,13 @@ trait ReportsScheduledTaskOutputs
         return round((hrtime(true) - $this->scheduledTaskStartMs) / 1e+6);
     }
 
-    public function scheduledTaskFailed(Event $task, $output)
+    public function scheduledTaskFailed(Event $task)
     {
+        if (! app('appkeep')->scheduledTaskMonitoringEnabled) {
+            // If monitoring is disabled, don't send the output
+            return;
+        }
+
         $duration = $this->getScheduledTaskRunDuration();
         $finishedAt = now();
 
@@ -33,8 +50,7 @@ trait ReportsScheduledTaskOutputs
             ->failed()
             ->setDuration($duration)
             ->setStartedAt($this->scheduledTaskStartedAt)
-            ->setFinishedAt($finishedAt)
-            ->setOutput($output);
+            ->setFinishedAt($finishedAt);
 
         try {
             $this->client()->sendScheduledTaskOutput($output);
@@ -43,8 +59,13 @@ trait ReportsScheduledTaskOutputs
         }
     }
 
-    public function scheduledTaskCompleted(Event $task, $output)
+    public function scheduledTaskCompleted(Event $task)
     {
+        if (! app('appkeep')->scheduledTaskMonitoringEnabled) {
+            // If monitoring is disabled, don't send the output
+            return;
+        }
+
         $duration = $this->getScheduledTaskRunDuration();
         $finishedAt = now();
 
@@ -52,8 +73,7 @@ trait ReportsScheduledTaskOutputs
             ->succeeded()
             ->setDuration($duration)
             ->setStartedAt($this->scheduledTaskStartedAt)
-            ->setFinishedAt($finishedAt)
-            ->setOutput($output);
+            ->setFinishedAt($finishedAt);
 
         try {
             $this->client()->sendScheduledTaskOutput($output);

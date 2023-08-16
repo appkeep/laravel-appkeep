@@ -8,21 +8,37 @@ use Appkeep\Laravel\Support\ScheduledTaskId;
 
 class ScheduledTaskOutput
 {
+    public string $id;
     public bool $success = true;
     public ?float $duration = null;
     public ?string $output = null;
     public ?DateTime $startedAt = null;
     public ?DateTime $finishedAt = null;
 
-    public function __construct(public string $id)
+    public function __construct(string $id)
     {
+        $this->id = $id;
     }
 
     public static function fromScheduledTask(Event $task)
     {
-        return new self(
-            ScheduledTaskId::get($task)
-        );
+        $output = new self(ScheduledTaskId::get($task));
+
+        return $output->setOutput(self::getEventOutput($task));
+    }
+
+    private static function getEventOutput(Event $event)
+    {
+        if (
+            ! $event->output ||
+            $event->output === $event->getDefaultOutput() ||
+            $event->shouldAppendOutput ||
+            ! file_exists($event->output)
+        ) {
+            return '';
+        }
+
+        return trim(file_get_contents($event->output));
     }
 
     public function succeeded()

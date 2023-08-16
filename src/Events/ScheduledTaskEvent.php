@@ -6,10 +6,13 @@ use Appkeep\Laravel\ScheduledTaskOutput;
 
 class ScheduledTaskEvent extends AbstractEvent
 {
+    private ScheduledTaskOutput $output;
+
     protected $name = 'scheduled-task';
 
-    public function __construct(private ScheduledTaskOutput $output)
+    public function __construct(ScheduledTaskOutput $output)
     {
+        $this->output = $output;
         parent::__construct();
     }
 

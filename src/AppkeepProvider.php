@@ -27,6 +27,10 @@ class AppkeepProvider extends ServiceProvider
             return new AppkeepService();
         });
 
+        $this->app->bind(HttpClient::class, function () {
+            return new HttpClient(config('appkeep.key'));
+        });
+
         if ($this->app->runningInConsole()) {
             $this->registerDefaultChecks();
         }
@@ -70,28 +74,29 @@ class AppkeepProvider extends ServiceProvider
                 ->runInBackground()
                 ->evenInMaintenanceMode();
 
-            collect($schedule->events())
-                ->filter(function ($event) {
-                    return $event->command && ! str_contains($event->command, 'appkeep:run');
-                })
-                ->each(function (Event $event) {
-                    /**
-                     * @var AppkeepService
-                     */
-                    $appkeep = app('appkeep');
-
-                    $event->before(
-                        fn () => $appkeep->scheduledTaskStarted($event)
-                    );
-
-                    $event->onFailureWithOutput(
-                        fn ($output) => $appkeep->scheduledTaskFailed($event, $output)
-                    );
-
-                    $event->onSuccessWithOutput(
-                        fn ($output) => $appkeep->scheduledTaskCompleted($event, $output)
-                    );
-                });
+            $this->watchScheduledTasks($schedule);
         });
+    }
+
+    protected function watchScheduledTasks(Schedule $schedule)
+    {
+        collect($schedule->events())
+            ->filter(function ($event) {
+                logger($event->command);
+                // Don't monitor the Appkeep scheduled task itself.
+                return $event->command && ! str_contains($event->command, 'appkeep:run');
+            })
+            ->each(function (Event $event) {
+                /**
+                 * @var AppkeepService
+                 */
+                $appkeep = app('appkeep');
+
+                $event->before(fn () => $appkeep->scheduledTaskStarted($event));
+
+                $event->onSuccessWithOutput(fn () => $appkeep->scheduledTaskCompleted($event));
+
+                $event->onFailureWithOutput(fn () => $appkeep->scheduledTaskFailed($event));
+            });
     }
 }
