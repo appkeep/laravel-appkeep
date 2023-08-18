@@ -46,10 +46,10 @@ class SpecsContext implements Arrayable
     {
         if (PHP_OS === 'Linux') {
             $output = shell_exec('free -m | grep Mem | awk \'{print $2}\'');
-            $output = $output / 1024;  // convert MB to GB
+            $output = trim($output) / 1024;  // convert MB to GB
         } elseif (PHP_OS === 'Darwin' || PHP_OS === 'FreeBSD') {
             $output = shell_exec('sysctl -n hw.memsize');
-            $output = $output / 1073741824;  // convert bytes to GB
+            $output = trim($output) / 1073741824;  // convert bytes to GB
         } else {
             throw new RuntimeException('Operating system not supported!');
         }
