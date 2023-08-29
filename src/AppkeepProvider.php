@@ -10,11 +10,12 @@ use Appkeep\Laravel\Commands\ListCommand;
 use Appkeep\Laravel\Commands\LoginCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Appkeep\Laravel\Commands\PostDeployCommand;
+use Appkeep\Laravel\Concerns\RegisterEventListeners;
 use Appkeep\Laravel\Concerns\RegistersDefaultChecks;
 
 class AppkeepProvider extends ServiceProvider
 {
-    use RegistersDefaultChecks;
+    use RegistersDefaultChecks, RegisterEventListeners;
 
     /**
      * Register the application services.
@@ -41,6 +42,8 @@ class AppkeepProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->registerEventListeners();
+
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
 
         if ($this->app->runningInConsole()) {

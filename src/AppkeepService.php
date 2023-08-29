@@ -10,6 +10,7 @@ class AppkeepService
     use ReportsScheduledTaskOutputs;
 
     public $checks = [];
+    public $slowQueryEvents = [];
 
     public function version()
     {
