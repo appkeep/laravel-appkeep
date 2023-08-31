@@ -21,8 +21,7 @@ class DatabaseConnectionCountCheck extends Check
 
     private $inspectors = [
         'mysql' => MySqlInspector::class,
-        'sqlsrv' => SqlServerInspector::class,
-        'postgres' => PostgresInspector::class,
+        'pgsql' => PostgresInspector::class,
     ];
 
     /**
@@ -82,7 +81,6 @@ class DatabaseConnectionCountCheck extends Check
                 try {
                     return $inspector->maximumConnectionCount();
                 } catch (Exception $e) {
-                    dd($e);
                     // Failed to get the maximum connection count.
                     report($e);
 
