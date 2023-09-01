@@ -11,6 +11,7 @@ use Appkeep\Laravel\Checks\DiskUsageCheck;
 use Appkeep\Laravel\Checks\SystemLoadCheck;
 use Appkeep\Laravel\Checks\OptimizationCheck;
 use Appkeep\Laravel\Checks\ProductionModeCheck;
+use Appkeep\Laravel\Checks\DatabaseConnectionCountCheck;
 use Laravel\Horizon\Contracts\MasterSupervisorRepository;
 
 trait RegistersDefaultChecks
@@ -23,6 +24,8 @@ trait RegistersDefaultChecks
             StorageCheck::make(),
 
             DatabaseCheck::make(),
+
+            DatabaseConnectionCountCheck::make(),
 
             CacheCheck::make(),
 
