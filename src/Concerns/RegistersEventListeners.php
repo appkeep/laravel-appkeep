@@ -4,7 +4,7 @@ namespace Appkeep\Laravel\Concerns;
 
 use Illuminate\Support\Facades\Event;
 
-trait RegisterEventListeners
+trait RegistersEventListeners
 {
     protected function registerEventListeners()
     {

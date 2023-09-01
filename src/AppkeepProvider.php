@@ -2,6 +2,7 @@
 
 namespace Appkeep\Laravel;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Appkeep\Laravel\Commands\RunCommand;
 use Illuminate\Console\Scheduling\Event;
@@ -10,12 +11,13 @@ use Appkeep\Laravel\Commands\ListCommand;
 use Appkeep\Laravel\Commands\LoginCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Appkeep\Laravel\Commands\PostDeployCommand;
-use Appkeep\Laravel\Concerns\RegisterEventListeners;
+use Appkeep\Laravel\Concerns\RegistersEventListeners;
 use Appkeep\Laravel\Concerns\RegistersDefaultChecks;
+use Appkeep\Laravel\Listeners\SlowQueryHandler;
 
 class AppkeepProvider extends ServiceProvider
 {
-    use RegistersDefaultChecks, RegisterEventListeners;
+    use RegistersDefaultChecks, RegistersEventListeners;
 
     /**
      * Register the application services.
@@ -42,6 +44,10 @@ class AppkeepProvider extends ServiceProvider
      */
     public function boot()
     {
+        DB::whenQueryingForLongerThan(500, function ($connection, $event) {
+            dd($connection);
+            SlowQueryHandler::handle(SlowQueryHandler::$fileName, $event);
+        });
         $this->registerEventListeners();
 
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
