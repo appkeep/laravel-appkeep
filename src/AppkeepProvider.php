@@ -19,7 +19,7 @@ use Appkeep\Laravel\Listeners\SlowQueryHandler;
 
 class AppkeepProvider extends ServiceProvider
 {
-    use RegistersDefaultChecks, RegistersEventListeners;
+    use RegistersDefaultChecks;
 
     /**
      * Register the application services.
@@ -60,7 +60,6 @@ class AppkeepProvider extends ServiceProvider
             }
             SlowQueryHandler::handle(SlowQueryHandler::$fileName, $event, $context);
         });
-        $this->registerEventListeners();
 
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
 
@@ -106,7 +105,7 @@ class AppkeepProvider extends ServiceProvider
             ->filter(function ($event) {
                 logger($event->command);
                 // Don't monitor the Appkeep scheduled task itself.
-                return $event->command && ! str_contains($event->command, 'appkeep:run');
+                return $event->command && !str_contains($event->command, 'appkeep:run');
             })
             ->each(function (Event $event) {
                 /**
