@@ -2,7 +2,9 @@
 
 namespace Appkeep\Laravel;
 
+use Appkeep\Laravel\Commands\BatchSlowQueryCommand;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
 use Appkeep\Laravel\Commands\RunCommand;
 use Illuminate\Console\Scheduling\Event;
@@ -45,8 +47,18 @@ class AppkeepProvider extends ServiceProvider
     public function boot()
     {
         DB::whenQueryingForLongerThan(500, function ($connection, $event) {
-            dd($connection);
-            SlowQueryHandler::handle(SlowQueryHandler::$fileName, $event);
+            // TODO DO manual tests
+            if (app()->runningInConsole()) {
+                $context = [
+                    'command' => Request::server('argv', null)
+                ];
+            } else {
+                $context = [
+                    'url' => Request::url(),
+                    'method' => Request::method()
+                ];
+            }
+            SlowQueryHandler::handle(SlowQueryHandler::$fileName, $event, $context);
         });
         $this->registerEventListeners();
 
@@ -73,6 +85,7 @@ class AppkeepProvider extends ServiceProvider
             InitCommand::class,
             LoginCommand::class,
             PostDeployCommand::class,
+            BatchSlowQueryCommand::class,
         ]);
 
         $this->app->booted(function () {
