@@ -3,7 +3,7 @@
 namespace Appkeep\Laravel;
 
 use Illuminate\Support\Facades\Cache;
-use Appkeep\Laravel\Events\AbstractEvent;
+use Appkeep\Laravel\Events\Contracts\CollectableEvent;
 
 /**
  * This class is responsible for collecting events and storing them.
@@ -21,11 +21,10 @@ class EventCollector
     /**
      * Push an event to cache.
      */
-    public function push(AbstractEvent $event)
+    public function push(CollectableEvent $event)
     {
         $data = $event->toArray();
-        $json = json_encode($data);
-        $hash = md5($json);
+        $hash = $event->dedupeHash();
 
         // For now, we just store it in the memory
         if (isset($this->events[$hash])) {
@@ -38,7 +37,7 @@ class EventCollector
             return;
         }
 
-        $this->events[$hash] = $json;
+        $this->events[$hash] = $data;
     }
 
     /**
@@ -49,7 +48,7 @@ class EventCollector
         $storedEvents = Cache::get($this->cacheKey, []);
         $numStoredEvents = count($storedEvents);
 
-        foreach ($this->events as $hash => $json) {
+        foreach ($this->events as $hash => $data) {
             // Item already exists in cache.
             if (isset($storedEvents[$hash])) {
                 continue;
@@ -64,7 +63,7 @@ class EventCollector
                 break;
             }
 
-            $storedEvents[$hash] = $json;
+            $storedEvents[$hash] = $data;
             $numStoredEvents++;
         }
 

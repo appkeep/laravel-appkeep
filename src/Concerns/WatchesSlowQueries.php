@@ -2,9 +2,8 @@
 
 namespace Appkeep\Laravel\Concerns;
 
-use Illuminate\Support\Facades\DB;
 use Appkeep\Laravel\EventCollector;
-use Illuminate\Database\Connection;
+use Illuminate\Support\Facades\Event;
 use Appkeep\Laravel\Events\SlowQueryEvent;
 use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Contracts\Foundation\Application;
@@ -13,7 +12,7 @@ trait WatchesSlowQueries
 {
     public $watchSlowQueries = true;
 
-    public $slowQueryThreshold = 500;
+    public static $slowQueryThreshold = 500;
 
     /**
      * Disable monitoring of scheduled tasks.
@@ -31,7 +30,7 @@ trait WatchesSlowQueries
      */
     public function reportQueriesSlowerThan($threshold)
     {
-        $this->slowQueryThreshold = $threshold;
+        static::$slowQueryThreshold = $threshold;
 
         return $this;
     }
@@ -42,19 +41,14 @@ trait WatchesSlowQueries
             return;
         }
 
-        // DB::whenQueryingForLongerThan was added in Laravel 9.18.0
-        // Check if the method exists before using it.
-        if (version_compare(app()->version(), '9.18.0', '<')) {
-            return;
-        }
-
-        DB::whenQueryingForLongerThan(
-            $this->slowQueryThreshold,
-            function (Connection $connection, QueryExecuted $event) use ($app) {
-                $app->make(EventCollector::class)->push(
-                    new SlowQueryEvent($connection, $event)
-                );
+        Event::listen(QueryExecuted::class, function (QueryExecuted $event) use ($app) {
+            if ($event->time < static::$slowQueryThreshold) {
+                return;
             }
-        );
+
+            $app->make(EventCollector::class)->push(
+                new SlowQueryEvent($event)
+            );
+        });
     }
 }
