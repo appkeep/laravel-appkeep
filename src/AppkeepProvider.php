@@ -8,6 +8,7 @@ use Appkeep\Laravel\Commands\RunCommand;
 use Appkeep\Laravel\Commands\InitCommand;
 use Appkeep\Laravel\Commands\ListCommand;
 use Appkeep\Laravel\Commands\LoginCommand;
+use Appkeep\Laravel\Commands\BackupCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Appkeep\Laravel\Commands\PostDeployCommand;
 use Appkeep\Laravel\Concerns\RegistersDefaultChecks;
@@ -50,8 +51,14 @@ class AppkeepProvider extends ServiceProvider
         $this->bootForConsole();
 
         $this->app->booted(function () {
+            // Don't do anything if project key is not set.
+            if (! config('appkeep.key')) {
+                return;
+            }
+
             if ($this->app->runningInConsole()) {
                 $this->scheduleRunCommand();
+                $this->scheduleBackups();
             }
 
             // Watch slow queries, scheduled tasks, etc.
@@ -83,6 +90,7 @@ class AppkeepProvider extends ServiceProvider
             ListCommand::class,
             InitCommand::class,
             LoginCommand::class,
+            BackupCommand::class,
             PostDeployCommand::class,
         ]);
     }
@@ -95,9 +103,16 @@ class AppkeepProvider extends ServiceProvider
             ->everyMinute()
             ->runInBackground()
             ->evenInMaintenanceMode();
+    }
 
-        $this->app->singleton('command.appkeep.run', function ($app) {
-            return new RunCommand($app['appkeep']);
-        });
+    protected function scheduleBackups()
+    {
+        if (! config('appkeep.backups.enabled')) {
+            return;
+        }
+
+        $backups = $this->app->make(BackupService::class);
+        $backups->applyConfig();
+        $backups->scheduleBackups();
     }
 }
