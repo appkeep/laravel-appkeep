@@ -38,6 +38,19 @@ class HttpClient
         return $this->sendEvent(new ScheduledTaskEvent($output))->throw();
     }
 
+    /**
+     * Send batch events to Appkeep
+     */
+    public function sendBatchEvents(array $events)
+    {
+        return Http::withHeaders($this->defaultHeaders())->post(
+            config('appkeep.endpoint'),
+            [
+                'batch' => $events,
+            ]
+        );
+    }
+
     protected function defaultHeaders()
     {
         return [
