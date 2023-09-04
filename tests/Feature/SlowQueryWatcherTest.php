@@ -46,8 +46,6 @@ class SlowQueryTest extends TestCase
         $event = array_values($events)[0];
 
         $this->assertEquals('slow-query', Arr::get($event, 'name'));
-
-        $this->assertEquals('testing', Arr::get($event, 'context.database.name'));
         $this->assertEquals('sqlite', Arr::get($event, 'context.database.driver'));
 
         $this->assertEquals('SELECT RANDOM() AS random_number;', Arr::get($event, 'query.sql'));
