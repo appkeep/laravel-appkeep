@@ -2,7 +2,11 @@
 
 namespace Tests\Feature;
 
+use Appkeep\Laravel\AppkeepService;
+use Appkeep\Laravel\EventCollector;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Tests\TestCheck;
 use Appkeep\Laravel\Result;
@@ -55,11 +59,6 @@ class RunCommandTest extends TestCase
 
         Carbon::setTestNow(Carbon::now()->setMinute(3)->setSecond(0));
 
-        Appkeep::forgetDefaultChecks()->checks([
-            TestCheck::make('test-check-1')->everyMinute(),
-            TestCheck::make('test-check-15')->everyFifteenMinutes(),
-        ]);
-
         // Prevent hitting Appkeep server.
         $this->artisan('appkeep:run')->assertExitCode(0);
 
@@ -80,6 +79,35 @@ class RunCommandTest extends TestCase
             $data = $request->data();
 
             return count($data['checks']) === 2;
+        });
+    }
+
+    /**
+     * @test
+     */
+    public function it_sends_batched_events()
+    {
+        Http::fake();
+        Cache::flush();
+        AppkeepService::$slowQueryThreshold = 0;
+
+        // Don't execute checks
+        Appkeep::forgetDefaultChecks();
+
+        // Using sqlite, run a slow query without needing any actual tables. Use sleep
+        // to simulate a slow query.
+        DB::statement('SELECT RANDOM() AS random_number2;');
+
+        // Normally, this would run when the test finishes. Go ahead and run it early.
+        $this->app->make(EventCollector::class)->persist();
+
+        $this->artisan('appkeep:run')->assertExitCode(0);
+
+        Http::assertSent(function ($request) {
+            $data = $request->data();
+
+            $eventCount = count($data['batch']);
+            return $eventCount == 1;
         });
     }
 }
