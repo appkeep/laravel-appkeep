@@ -46,10 +46,11 @@ class HttpClient
         return Http::withHeaders($this->defaultHeaders())->post(
             config('appkeep.endpoint'),
             [
-                'batch' => $events
+                'batch' => $events,
             ]
         );
     }
+
     protected function defaultHeaders()
     {
         return [

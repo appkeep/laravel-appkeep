@@ -2,16 +2,16 @@
 
 namespace Tests\Feature;
 
-use Appkeep\Laravel\AppkeepService;
-use Appkeep\Laravel\EventCollector;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 use Tests\TestCheck;
 use Appkeep\Laravel\Result;
+use Illuminate\Support\Facades\DB;
+use Appkeep\Laravel\AppkeepService;
+use Appkeep\Laravel\EventCollector;
 use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 
 class RunCommandTest extends TestCase
 {
@@ -107,6 +107,7 @@ class RunCommandTest extends TestCase
             $data = $request->data();
 
             $eventCount = count($data['batch']);
+
             return $eventCount == 1;
         });
     }
