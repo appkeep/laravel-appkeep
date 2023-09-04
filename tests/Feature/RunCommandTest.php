@@ -55,6 +55,15 @@ class RunCommandTest extends TestCase
      */
     public function it_runs_only_due_checks()
     {
+        Appkeep::forgetDefaultChecks()->checks([
+            TestCheck::make('test-check')->result(
+                Result::ok()->summary('50%')
+            ),
+            TestCheck::make('test-check-2')->result(
+                Result::ok()->summary('50%')
+            )->everyFifteenMinutes(),
+        ]);
+
         Http::fake();
 
         Carbon::setTestNow(Carbon::now()->setMinute(3)->setSecond(0));
@@ -67,7 +76,7 @@ class RunCommandTest extends TestCase
             $data = $request->data();
 
             return count($data['checks']) === 1
-                && $data['checks'][0]['check'] === 'test-check-1';
+                && $data['checks'][0]['check'] === 'test-check';
         });
 
         Carbon::setTestNow(Carbon::now()->setMinute(15)->setSecond(0));
