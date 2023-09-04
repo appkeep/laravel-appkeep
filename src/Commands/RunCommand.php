@@ -5,6 +5,7 @@ namespace Appkeep\Laravel\Commands;
 use Appkeep\Laravel\Result;
 use Illuminate\Console\Command;
 use Appkeep\Laravel\Enums\Status;
+use Appkeep\Laravel\EventCollector;
 use Appkeep\Laravel\Facades\Appkeep;
 use Appkeep\Laravel\Events\ChecksEvent;
 
@@ -14,6 +15,35 @@ class RunCommand extends Command
     protected $description = 'Run all Appkeep checks';
 
     public function handle()
+    {
+        $this->sendCollectedEvents();
+
+        $this->runChecks();
+    }
+
+    private function sendCollectedEvents()
+    {
+        $collector = resolve(EventCollector::class);
+
+        $events = $collector->pull();
+
+        if (empty($events)) {
+            $this->line('No collected events to send.');
+
+            return;
+        }
+
+        $this->info(sprintf('Sending %d collected events to Appkeep...', count($events)));
+
+        try {
+            Appkeep::client()->sendBatchEvents(array_values($events))->throw();
+        } catch (\Exception $e) {
+            $this->warn('Failed to post collected events to Appkeep.');
+            $this->line($e->getMessage());
+        }
+    }
+
+    private function runChecks()
     {
         $checks = Appkeep::checks();
 

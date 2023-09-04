@@ -4,22 +4,57 @@ namespace Appkeep\Laravel\Concerns;
 
 use Appkeep\Laravel\ScheduledTaskOutput;
 use Illuminate\Console\Scheduling\Event;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\Foundation\Application;
 
-trait ReportsScheduledTaskOutputs
+trait WatchesScheduledTasks
 {
-    public $scheduledTaskMonitoringEnabled = true;
+    public $watchScheduledTasks = true;
 
     private $scheduledTaskStartMs;
+
     private $scheduledTaskStartedAt;
 
     /**
-     * Disables scheduled task monitoring.
+     * Disable monitoring of scheduled tasks.
      */
-    public function dontMonitorScheduledTasks()
+    public function dontWatchScheduledTasks()
     {
-        $this->scheduledTaskMonitoringEnabled = false;
+        $this->watchScheduledTasks = false;
 
         return $this;
+    }
+
+    protected function watchScheduledTasks(Application $app)
+    {
+        if (! $this->watchScheduledTasks) {
+            return;
+        }
+
+        if (! $app->runningInConsole()) {
+            return;
+        }
+
+        $schedule = $app->make(Schedule::class);
+
+        collect($schedule->events())
+            ->filter(function ($event) {
+                logger($event->command);
+                // Don't monitor the Appkeep scheduled task itself.
+                return $event->command && ! str_contains($event->command, 'appkeep:run');
+            })
+            ->each(function (Event $event) {
+                /**
+                 * @var AppkeepService
+                 */
+                $appkeep = app('appkeep');
+
+                $event->before(fn () => $appkeep->scheduledTaskStarted($event));
+
+                $event->onSuccessWithOutput(fn () => $appkeep->scheduledTaskCompleted($event));
+
+                $event->onFailureWithOutput(fn () => $appkeep->scheduledTaskFailed($event));
+            });
     }
 
     public function scheduledTaskStarted(Event $task)
