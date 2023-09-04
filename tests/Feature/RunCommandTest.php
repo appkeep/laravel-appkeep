@@ -94,11 +94,15 @@ class RunCommandTest extends TestCase
         // Don't execute checks
         Appkeep::forgetDefaultChecks();
 
-        // Using sqlite, run a slow query without needing any actual tables. Use sleep
-        // to simulate a slow query.
-        DB::statement('SELECT RANDOM() AS random_number2;');
+        $this->artisan('appkeep:run')->assertExitCode(0);
+        Http::assertNothingSent();
 
-        // Normally, this would run when the test finishes. Go ahead and run it early.
+        // Now run a query... This should trigger a slow query event.
+        DB::statement('SELECT RANDOM() AS random_number1;');
+        DB::statement('SELECT RANDOM() AS random_number2;');
+        DB::statement('SELECT RANDOM() AS random_number2;');
+        DB::statement('SELECT RANDOM() AS random_number3;');
+
         $this->app->make(EventCollector::class)->persist();
 
         $this->artisan('appkeep:run')->assertExitCode(0);
@@ -108,7 +112,7 @@ class RunCommandTest extends TestCase
 
             $eventCount = count($data['batch']);
 
-            return $eventCount == 1;
+            return $eventCount == 3;
         });
     }
 }

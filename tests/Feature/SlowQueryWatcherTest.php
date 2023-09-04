@@ -32,8 +32,6 @@ class SlowQueryTest extends TestCase
      */
     public function it_listens_to_slow_queries_from_cli()
     {
-        // Using sqlite, run a slow query without needing any actual tables. Use sleep
-        // to simulate a slow query.
         DB::statement('SELECT RANDOM() AS random_number;');
 
         // Normally, this would run when the test finishes. Go ahead and run it early.
