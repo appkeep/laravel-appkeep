@@ -2,20 +2,15 @@
 
 namespace Appkeep\Laravel;
 
-use Appkeep\Laravel\Commands\BatchSlowQueryCommand;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request;
+use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\ServiceProvider;
 use Appkeep\Laravel\Commands\RunCommand;
-use Illuminate\Console\Scheduling\Event;
 use Appkeep\Laravel\Commands\InitCommand;
 use Appkeep\Laravel\Commands\ListCommand;
 use Appkeep\Laravel\Commands\LoginCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Appkeep\Laravel\Commands\PostDeployCommand;
-use Appkeep\Laravel\Concerns\RegistersEventListeners;
 use Appkeep\Laravel\Concerns\RegistersDefaultChecks;
-use Appkeep\Laravel\Listeners\SlowQueryHandler;
 
 class AppkeepProvider extends ServiceProvider
 {
@@ -32,6 +27,10 @@ class AppkeepProvider extends ServiceProvider
             return new AppkeepService();
         });
 
+        $this->app->singleton(EventCollector::class, function () {
+            return new EventCollector();
+        });
+
         $this->app->bind(HttpClient::class, function () {
             return new HttpClient(config('appkeep.key'));
         });
@@ -46,30 +45,31 @@ class AppkeepProvider extends ServiceProvider
      */
     public function boot()
     {
-        DB::whenQueryingForLongerThan(500, function ($connection, $event) {
-            // TODO DO manual tests
-            if (app()->runningInConsole()) {
-                $context = [
-                    'command' => Request::server('argv', null)
-                ];
-            } else {
-                $context = [
-                    'url' => Request::url(),
-                    'method' => Request::method()
-                ];
-            }
-            SlowQueryHandler::handle(SlowQueryHandler::$fileName, $event, $context);
-        });
-
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
 
-        if ($this->app->runningInConsole()) {
-            $this->bootForConsole();
-        }
+        $this->bootForConsole();
+
+        $this->app->booted(function () {
+            if ($this->app->runningInConsole()) {
+                $this->scheduleRunCommand();
+            }
+
+            // Watch slow queries, scheduled tasks, etc.
+            Appkeep::watch($this->app);
+        });
+
+        $this->app->terminating(function () {
+            // Write in-memory events to cache.
+            $this->app->make(EventCollector::class)->persist();
+        });
     }
 
     public function bootForConsole()
     {
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
         $this->publishes([
             __DIR__ . '/../config/appkeep.php' => config_path('appkeep.php'),
         ], 'config');
@@ -84,40 +84,20 @@ class AppkeepProvider extends ServiceProvider
             InitCommand::class,
             LoginCommand::class,
             PostDeployCommand::class,
-            BatchSlowQueryCommand::class,
         ]);
-
-        $this->app->booted(function () {
-            $schedule = $this->app->make(Schedule::class);
-
-            $schedule->command('appkeep:run')
-                ->everyMinute()
-                ->runInBackground()
-                ->evenInMaintenanceMode();
-
-            $this->watchScheduledTasks($schedule);
-        });
     }
 
-    protected function watchScheduledTasks(Schedule $schedule)
+    protected function scheduleRunCommand()
     {
-        collect($schedule->events())
-            ->filter(function ($event) {
-                logger($event->command);
-                // Don't monitor the Appkeep scheduled task itself.
-                return $event->command && !str_contains($event->command, 'appkeep:run');
-            })
-            ->each(function (Event $event) {
-                /**
-                 * @var AppkeepService
-                 */
-                $appkeep = app('appkeep');
+        $schedule = $this->app->make(Schedule::class);
 
-                $event->before(fn () => $appkeep->scheduledTaskStarted($event));
+        $schedule->command('appkeep:run')
+            ->everyMinute()
+            ->runInBackground()
+            ->evenInMaintenanceMode();
 
-                $event->onSuccessWithOutput(fn () => $appkeep->scheduledTaskCompleted($event));
-
-                $event->onFailureWithOutput(fn () => $appkeep->scheduledTaskFailed($event));
-            });
+        $this->app->singleton('command.appkeep.run', function ($app) {
+            return new RunCommand($app['appkeep']);
+        });
     }
 }

@@ -3,18 +3,20 @@
 namespace Appkeep\Laravel;
 
 use InvalidArgumentException;
-use Appkeep\Laravel\Concerns\ReportsScheduledTaskOutputs;
+use Appkeep\Laravel\Concerns\WatchesSlowQueries;
+use Illuminate\Contracts\Foundation\Application;
+use Appkeep\Laravel\Concerns\WatchesScheduledTasks;
 
 class AppkeepService
 {
-    use ReportsScheduledTaskOutputs;
+    use WatchesSlowQueries;
+    use WatchesScheduledTasks;
 
     public $checks = [];
-    public $slowQueryEvents = [];
 
     public function version()
     {
-        return '0.6.1';
+        return '0.7.0';
     }
 
     public function client()
@@ -30,6 +32,13 @@ class AppkeepService
         $this->checks = [];
 
         return $this;
+    }
+
+    public function watch(Application $app)
+    {
+        $this->watchScheduledTasks($app);
+
+        $this->watchSlowQueries($app);
     }
 
     public function checks(array $checks = [], $replace = false)
