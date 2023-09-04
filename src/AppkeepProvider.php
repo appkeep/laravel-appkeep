@@ -2,11 +2,11 @@
 
 namespace Appkeep\Laravel;
 
+use Appkeep\Laravel\Facades\Appkeep;
 use Illuminate\Support\ServiceProvider;
 use Appkeep\Laravel\Commands\RunCommand;
 use Appkeep\Laravel\Commands\InitCommand;
 use Appkeep\Laravel\Commands\ListCommand;
-use Appkeep\Laravel\Backups\BackupService;
 use Appkeep\Laravel\Commands\LoginCommand;
 use Appkeep\Laravel\Commands\BackupCommand;
 use Illuminate\Console\Scheduling\Schedule;
@@ -28,6 +28,14 @@ class AppkeepProvider extends ServiceProvider
             return new AppkeepService();
         });
 
+        $this->app->singleton(EventCollector::class, function () {
+            return new EventCollector();
+        });
+
+        $this->app->bind(HttpClient::class, function () {
+            return new HttpClient(config('appkeep.key'));
+        });
+
         if ($this->app->runningInConsole()) {
             $this->registerDefaultChecks();
         }
@@ -40,13 +48,35 @@ class AppkeepProvider extends ServiceProvider
     {
         $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
 
-        if ($this->app->runningInConsole()) {
-            $this->bootForConsole();
-        }
+        $this->bootForConsole();
+
+        $this->app->booted(function () {
+            // Don't do anything if project key is not set.
+            if (! config('appkeep.key')) {
+                return;
+            }
+
+            if ($this->app->runningInConsole()) {
+                $this->scheduleRunCommand();
+                $this->scheduleBackups();
+            }
+
+            // Watch slow queries, scheduled tasks, etc.
+            Appkeep::watch($this->app);
+        });
+
+        $this->app->terminating(function () {
+            // Write in-memory events to cache.
+            $this->app->make(EventCollector::class)->persist();
+        });
     }
 
     public function bootForConsole()
     {
+        if (! $this->app->runningInConsole()) {
+            return;
+        }
+
         $this->publishes([
             __DIR__ . '/../config/appkeep.php' => config_path('appkeep.php'),
         ], 'config');
@@ -63,25 +93,26 @@ class AppkeepProvider extends ServiceProvider
             BackupCommand::class,
             PostDeployCommand::class,
         ]);
+    }
 
-        $this->app->booted(function () {
-            // Don't schedule anything if project key is not set.
-            if (! config('appkeep.key')) {
-                return;
-            }
+    protected function scheduleRunCommand()
+    {
+        $schedule = $this->app->make(Schedule::class);
 
-            $schedule = $this->app->make(Schedule::class);
+        $schedule->command('appkeep:run')
+            ->everyMinute()
+            ->runInBackground()
+            ->evenInMaintenanceMode();
+    }
 
-            $schedule->command('appkeep:run')
-                ->everyMinute()
-                ->runInBackground();
+    protected function scheduleBackups()
+    {
+        if (! config('appkeep.backups.enabled')) {
+            return;
+        }
 
-            // Schedule backup tasks, if it's enabled.
-            if (config('appkeep.backups.enabled')) {
-                $backups = $this->app->make(BackupService::class);
-                $backups->applyConfig();
-                $backups->scheduleBackups();
-            }
-        });
+        $backups = $this->app->make(BackupService::class);
+        $backups->applyConfig();
+        $backups->scheduleBackups();
     }
 }

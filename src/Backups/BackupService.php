@@ -12,7 +12,10 @@ class BackupService
 
     public function applyConfig()
     {
-        config()->set('backup.backup.name', Str::snake(config('app.name') . ' backups'));
+        config()->set(
+            'backup.backup.name',
+            Str::snake(config('app.name') . ' backups')
+        );
 
         $this->applyFileConfig();
 
