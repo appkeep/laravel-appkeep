@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Appkeep\Laravel\Database\MySqlInspector;
 use Appkeep\Laravel\Database\PostgresInspector;
-use Appkeep\Laravel\Database\SqlServerInspector;
 
 class DatabaseConnectionCountCheck extends Check
 {

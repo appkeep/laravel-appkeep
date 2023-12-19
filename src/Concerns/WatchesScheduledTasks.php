@@ -39,21 +39,15 @@ trait WatchesScheduledTasks
 
         collect($schedule->events())
             ->filter(function ($event) {
-                logger($event->command);
                 // Don't monitor the Appkeep scheduled task itself.
                 return $event->command && ! str_contains($event->command, 'appkeep:run');
             })
             ->each(function (Event $event) {
-                /**
-                 * @var AppkeepService
-                 */
-                $appkeep = app('appkeep');
+                $event->before(fn () => $this->scheduledTaskStarted($event));
 
-                $event->before(fn () => $appkeep->scheduledTaskStarted($event));
+                $event->onSuccessWithOutput(fn () => $this->scheduledTaskCompleted($event));
 
-                $event->onSuccessWithOutput(fn () => $appkeep->scheduledTaskCompleted($event));
-
-                $event->onFailureWithOutput(fn () => $appkeep->scheduledTaskFailed($event));
+                $event->onFailureWithOutput(fn () => $this->scheduledTaskFailed($event));
             });
     }
 
@@ -73,11 +67,6 @@ trait WatchesScheduledTasks
 
     public function scheduledTaskFailed(Event $task)
     {
-        if (! app('appkeep')->scheduledTaskMonitoringEnabled) {
-            // If monitoring is disabled, don't send the output
-            return;
-        }
-
         $duration = $this->getScheduledTaskRunDuration();
         $finishedAt = now();
 
@@ -96,11 +85,6 @@ trait WatchesScheduledTasks
 
     public function scheduledTaskCompleted(Event $task)
     {
-        if (! app('appkeep')->scheduledTaskMonitoringEnabled) {
-            // If monitoring is disabled, don't send the output
-            return;
-        }
-
         $duration = $this->getScheduledTaskRunDuration();
         $finishedAt = now();
 
