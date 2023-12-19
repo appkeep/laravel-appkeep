@@ -66,7 +66,7 @@ class AppkeepProvider extends ServiceProvider
 
     public function bootForConsole()
     {
-        if (!$this->app->runningInConsole()) {
+        if (! $this->app->runningInConsole()) {
             return;
         }
 

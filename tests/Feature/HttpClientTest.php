@@ -20,7 +20,6 @@ class HttpClientTest extends TestCase
 
         $client = new HttpClient('appkeep_key');
         $client->sendEvent(new class extends AbstractEvent {
-
             protected $name = 'test_event';
 
             public function toArray()

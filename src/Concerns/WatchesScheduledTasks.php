@@ -27,11 +27,11 @@ trait WatchesScheduledTasks
 
     protected function watchScheduledTasks(Application $app)
     {
-        if (!$this->watchScheduledTasks) {
+        if (! $this->watchScheduledTasks) {
             return;
         }
 
-        if (!$app->runningInConsole()) {
+        if (! $app->runningInConsole()) {
             return;
         }
 
@@ -40,7 +40,7 @@ trait WatchesScheduledTasks
         collect($schedule->events())
             ->filter(function ($event) {
                 // Don't monitor the Appkeep scheduled task itself.
-                return $event->command && !str_contains($event->command, 'appkeep:run');
+                return $event->command && ! str_contains($event->command, 'appkeep:run');
             })
             ->each(function (Event $event) {
                 $event->before(fn () => $this->scheduledTaskStarted($event));
