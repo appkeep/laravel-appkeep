@@ -80,23 +80,30 @@ class AppkeepProvider extends ServiceProvider
 
     protected function watchScheduledTasks(Schedule $schedule)
     {
+        /**
+         * @var AppkeepService
+         */
+        $appkeep = app('appkeep');
+
+        if (!$appkeep->scheduledTaskMonitoringEnabled) {
+            return;
+        }
+
         collect($schedule->events())
             ->filter(function ($event) {
-                logger($event->command);
                 // Don't monitor the Appkeep scheduled task itself.
-                return $event->command && ! str_contains($event->command, 'appkeep:run');
+                return $event->command && !str_contains($event->command, 'appkeep:run');
             })
-            ->each(function (Event $event) {
-                /**
-                 * @var AppkeepService
-                 */
-                $appkeep = app('appkeep');
-
+            ->each(function (Event $event) use ($appkeep) {
                 $event->before(fn () => $appkeep->scheduledTaskStarted($event));
 
-                $event->onSuccessWithOutput(fn () => $appkeep->scheduledTaskCompleted($event));
+                $event->onSuccessWithOutput(
+                    fn () => $appkeep->scheduledTaskCompleted($event)
+                );
 
-                $event->onFailureWithOutput(fn () => $appkeep->scheduledTaskFailed($event));
+                $event->onFailureWithOutput(
+                    fn () => $appkeep->scheduledTaskFailed($event)
+                );
             });
     }
 }

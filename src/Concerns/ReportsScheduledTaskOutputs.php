@@ -38,11 +38,6 @@ trait ReportsScheduledTaskOutputs
 
     public function scheduledTaskFailed(Event $task)
     {
-        if (! app('appkeep')->scheduledTaskMonitoringEnabled) {
-            // If monitoring is disabled, don't send the output
-            return;
-        }
-
         $duration = $this->getScheduledTaskRunDuration();
         $finishedAt = now();
 
@@ -61,11 +56,6 @@ trait ReportsScheduledTaskOutputs
 
     public function scheduledTaskCompleted(Event $task)
     {
-        if (! app('appkeep')->scheduledTaskMonitoringEnabled) {
-            // If monitoring is disabled, don't send the output
-            return;
-        }
-
         $duration = $this->getScheduledTaskRunDuration();
         $finishedAt = now();
 
